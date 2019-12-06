@@ -1,0 +1,130 @@
+name: virtualworkng
+description: A new Flutter application.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.2
+  font_awesome_flutter: ^8.4.0
+  get_it: ^3.0.1
+  animated_text_kit: ^1.3.1
+  shared_preferences: ^0.5.3+5
+  provider: ^3.1.0+1
+  intro_slider: ^2.2.8
+  fluttertoast: ^3.1.3
+  flutter_offline: ^0.2.4
+  steps: ^0.0.1
+  community_material_icon: ^3.5.95
+  image_picker: ^0.6.2
+  flutter_spinkit: ^4.0.0
+  flutter_responsive_screen: ^1.0.0
+  avatar_glow: ^1.1.0
+  titled_navigation_bar: ^3.6.0
+  find_dropdown: ^0.1.7+1
+  device_preview: ^0.2.6
+  intl: ^0.16.0
+  flutter_datetime_picker: ^1.2.8
+  firebase_auth: ^0.15.0+1
+  cloud_firestore: ^0.12.10+2
+  bottom_navy_bar: ^5.2.2
+  gradient_text: ^1.0.2
+  charts_flutter: ^0.8.0
+  sliding_up_panel: ^0.3.6
+  rflutter_alert: ^1.0.3
+#  cached_network_image: ^1.1.2+1
+  flutter_swiper: ^1.1.6
+#  firebase_crashlytics: ^0.1.1+2
+   
+#  firebase_core: ^0.4.2
+#  flutter_email_sender: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+  assets:
+    - assets/images/onboard/
+    - assets/images/img/
+    - assets/flare/
+
+  fonts:
+    - family: Metropolis
+      fonts:
+        - asset: assets/fonts/Metropolis-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Metropolis-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Metropolis-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Metropolis-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Metropolis-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Metropolis-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Metropolis-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Metropolis-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Metropolis-Thin.ttf
+          weight: 100
+    - family: RobotoRegular
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: SourceCodePro
+      fonts:
+        - asset: assets/fonts/SourceCodePro-Black.ttf
+          weight: 900
+        - asset: assets/fonts/SourceCodePro-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/SourceCodePro-Semibold.ttf
+          weight: 600
+        - asset: assets/fonts/SourceCodePro-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/SourceCodePro-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/SourceCodePro-Light.ttf
+          weight: 300
+        - asset: assets/fonts/SourceCodePro-ExtraLight.ttf
+          weight: 200
+    - family: Lobster
+      fonts:
+         - asset: assets/fonts/Lobster-Regular.ttf
+    - family: Modak
+      fonts:
+         - asset: assets/fonts/Modak-Regular.ttf
+    - family: SairaExtraCondensed
+      fonts:
+         - asset: assets/fonts/SairaExtraCondensed-Bold.ttf
+         - asset: assets/fonts/SairaExtraCondensed-Light.ttf
+         - asset: assets/fonts/SairaExtraCondensed-Medium.ttf
+         - asset: assets/fonts/SairaExtraCondensed-Regular.ttf

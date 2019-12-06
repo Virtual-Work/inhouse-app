@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "35156037289",
+    "firebase_url": "https://virtualworkng.firebaseio.com",
+    "project_id": "virtualworkng",
+    "storage_bucket": "virtualworkng.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35156037289:android:d2e18e41aae8d819f0a3b8",
+        "android_client_info": {
+          "package_name": "ng.virtualwork.virtualworkng"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35156037289-o2vhtfus118mte54aeure5cb276qs7o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVWVIE9uqJhhlRuqcl-fLlXrKRR0W56rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35156037289-o2vhtfus118mte54aeure5cb276qs7o9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
