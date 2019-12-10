@@ -94,8 +94,6 @@ class _deleteProjectDialogState extends State<deleteProjectDialog> {
         stopLoading();
       } else {
         stopLoading();
-
-//       Navigator.pop(context);
       }
     });
     customF.showToast(message: '${widget.projectName} Successfully Delete');

@@ -291,7 +291,7 @@ bool deleteprocessing = false;
           stopLoading();
         } else {
           stopLoading();
-          customF.showToast(message: 'Successfully Registered');
+          customF.showToast(message: 'Successfully Removed');
          Navigator.pop(context);
         }
     });

@@ -264,7 +264,8 @@ class _ListOfProjectScreenState extends State<ListOfProjectScreen> with TickerPr
         builder: (BuildContext context) {
           return StatefulBuilder(
               builder: (context,state){
-                return AddProject(stateSetter: state, showSupervisorWidget: true,); // //should i show a place to add supervisor mail;
+                return AddProject(stateSetter: state, showSupervisorWidget: true,); //
+                // should i show a place to add supervisor mail;
               });
         });
   }
@@ -286,7 +287,7 @@ class _AddProjectState extends State<AddProject> {
   List<String> _supervisors = new List<String>();
   String _selectedSepervisors;
   bool processing = false;
-  TextEditingController projectNameController = TextEditingController();
+  TextEditingController projectCommentController = TextEditingController();
   TextEditingController projectTitleController = TextEditingController();
   String formattedDate;
 
@@ -314,16 +315,16 @@ class _AddProjectState extends State<AddProject> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
                   color: AppColor.primaryColorDark,
-                  child: Center(child: Text('Assign Project', style: AppTextStyle.headerSmall2(context),)),
+                  child: Center(child: Text('Add Project', style: AppTextStyle.headerSmall2(context),)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: TextField(
-                    controller: projectNameController,
+                    controller: projectTitleController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       border: const UnderlineInputBorder(),
-                      labelText: 'Project Name',
+                      labelText: 'Project Title',
                       labelStyle: AppTextStyle.inputLabelStyle(context),
                       hintStyle: TextStyle(
                           fontFamily: "WorkSansSemiBold", fontSize: 16.0),
@@ -335,10 +336,10 @@ class _AddProjectState extends State<AddProject> {
               padding: EdgeInsets.only(left: 10.0, right: 10.0),
               child: TextField(
                 keyboardType: TextInputType.text,
-                controller: projectTitleController,
+                controller: projectCommentController,
                 decoration: InputDecoration(
                   border: const UnderlineInputBorder(),
-                  labelText: 'Project Title',
+                  labelText: 'Comment',
                   labelStyle: AppTextStyle.inputLabelStyle(context),
                   hintStyle: TextStyle(
                       fontFamily: "WorkSansSemiBold", fontSize: 16.0),
@@ -402,16 +403,17 @@ class _AddProjectState extends State<AddProject> {
     });
   }
 
+  //Fetching Staff that container Supervisor privilege and display as Dropdown
   addToList( AsyncSnapshot<QuerySnapshot> snapshot){
     if(_supervisors != null){
       _supervisors.clear();
     }
-    print("************ Emails ***********");
+   // print("************ Emails ***********");
   for(var doc in snapshot.data.documents){
     if(doc.data['privilege'] == 'Staff'){ //If priviledge is Staff don't display the Email
 
     }else{
-      print('${doc.data['Email']} = ${doc.data['privilege']}');
+     // print('${doc.data['Email']} = ${doc.data['privilege']}');
       _supervisors.add(doc.documentID);
     }
   }
@@ -419,15 +421,15 @@ class _AddProjectState extends State<AddProject> {
   }
 
   addProjectToServer(){
-    String pName = projectNameController.text.trim();
+    String pComment = projectCommentController.text.trim();
     String pTitle = projectTitleController.text.trim();
     String supervisor = widget.showSupervisorWidget ? _selectedSepervisors : widget.supervisorEmail;
 
-    if(pName.isEmpty|| pTitle.isEmpty){
+    if(pComment.isEmpty|| pTitle.isEmpty){
       customF.showToast(message: 'Empty field detected');
     }else{
       startLoading();
-      api.addProject(projectName: pName, projectTitle: pTitle, supervisor: supervisor, createdDate: formattedDate).then((v) {
+      api.addProject(comment: pComment, projectTitle: pTitle, supervisor: supervisor, createdDate: formattedDate).then((v) {
         if (v != null) {
           // print(v.documentID);
           stopLoading();

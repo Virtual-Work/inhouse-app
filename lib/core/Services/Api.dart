@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:virtualworkng/model/ListofProjects.dart';
+import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/AdminDasbhoardScreen.dart';
 class Api {
   final databaseReference = Firestore.instance;
   DocumentReference documentReference;
@@ -153,9 +154,6 @@ class Api {
     }
   }
 
-
-
-
   //***********************************************************************************
 // **********************PROJECT API**************************************************
 // ***********************************************************************************
@@ -164,7 +162,6 @@ class Api {
   Stream<QuerySnapshot> getProjects(){
     try{
       return databaseReference.collection('Project').snapshots();
-      //getDocuments().asStream()
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
@@ -182,30 +179,96 @@ class Api {
     }
   }
 
-  //Future<QuerySnapshot> getTestProjectsFuture(){
-  Future<DocumentSnapshot> getTestProjectsFuture(){
+
+  Future addProject({String comment, projectTitle, supervisor, createdDate, }) async{
+   // title, status, comment (e.g links) to the database
     try{
-     //Working perfect //  var r = databaseReference.collection('Project').document('Microsoft').collection('deji@virtualwork.ng').getDocuments();
-     // return databaseReference.collection('Project').getDocuments();
-      var r = databaseReference.collection('Project').document('Microsoft').get();
-      return r;
-      //getDocuments().asStream()
+      await databaseReference.collection('Project').document(projectTitle).setData({
+        'Title': projectTitle,
+        'status': '0',
+        'Comment' : comment,
+        'Supervisors': [supervisor],
+        'DateCreated': createdDate,
+      });
+      //After that, Goto Staff Collection and Add this project to this Staff..
+      databaseReference.collection("Staffs").document(supervisor).updateData({
+        'Projects' : FieldValue.arrayUnion([projectTitle])
+      });
+
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
     }
   }
 
-  Future addProject({String projectName, projectTitle, supervisor, createdDate, comment}) async{
-   // title, status, comment (e.g links) to the database
+  Future editProject({String comment, projectName, newTitle}) async{
+    // Edit Project name...project title and comment
     try{
-      return databaseReference.collection('Project').document(projectTitle).collection(supervisor).document().setData({
-        'Title': projectTitle,
-        'status': '0',
+      await databaseReference.collection('Project').document(projectName).updateData({
+        'Title': newTitle,
         'Comment' : comment,
-        'supervisor': supervisor,
-        'DateCreated': createdDate,
       });
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future<DocumentReference>  deleteProject({String projectName}) async{
+    try{
+      await databaseReference.collection('Project').document(projectName).delete();
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+
+  Future removeSupervisorFromProject({String projectName, String staffEmail}){
+    try{
+      return databaseReference.collection("Project").document(projectName).updateData({
+        'Supervisors' : FieldValue.arrayRemove([staffEmail])
+      });
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  //Assign a Project to a particular Supervisor
+  Future assignProjectToStaff({projectTitle, supervisor, }) async{
+    try{
+      //First add this email to supervisorList
+      databaseReference.collection("Project").document(projectTitle).updateData({
+        'Supervisors' : FieldValue.arrayUnion([supervisor])
+      });
+
+      //After that, Goto Staff Collection and Add this project to this Staff..
+      databaseReference.collection("Staffs").document(supervisor).updateData({
+        'Projects' : FieldValue.arrayUnion([projectTitle])
+      });
+
+
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+
+  //***********************************************************************************
+// **********************TESTING API**************************************************
+// ***********************************************************************************
+
+
+  //Future<QuerySnapshot> getTestProjectsFuture(){
+  Future<QuerySnapshot>  getTestProjectsFuture()async{
+    try{
+      return  databaseReference.collection("Project").getDocuments();
+      //getDocuments().asStream()
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
@@ -221,6 +284,9 @@ class Api {
        'supervisor': supervisor,
        'DateCreated': createdDate,
      });
+
+
+
 //     var set = query2.setData({
 //       'Title': projectTitle,
 //       'status': '0',
@@ -237,15 +303,7 @@ class Api {
   }
 
 
-  Future<DocumentReference>  deleteProject({String projectName}) async{
-    try{
-      await databaseReference.collection('Project').document(projectName).delete();
 
-    }catch(e){
-      print('******signInAnonymous ERROR ${e.toString()}');
-      return null;
-    }
-  }
 //  Future<void> removeDocument(String id){
 //    return documentReference.document(id).delete();
 //  }

@@ -336,10 +336,15 @@ projectUI(QuerySnapshot snapshot){
                 enabled: true,
               ),
               onTap: (){
-                customF.detailsDialog(title:snapshot.documents[index].data['Title'],
-                    status: snapshot.documents[index].data['status'],
-                    supervisors: snapshot.documents[index].data['supervisor'],
-                context: context);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ViewProjectDetails(
+                        projectName: snapshot.documents[index].documentID,
+                        title:snapshot.documents[index].data['Title'],
+                        status: snapshot.documents[index].data['status'],
+                        supervisors: snapshot.documents[index].data['Supervisors'],
+                      );});
               },
             )
         )

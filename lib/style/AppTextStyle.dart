@@ -138,6 +138,14 @@ class AppTextStyle{
         fontWeight: FontWeight.w700,
         color: AppColor.thirdColor);
   }
+  static TextStyle headerSmall3_1(BuildContext context) {
+    return TextStyle(
+        fontFamily: "Metropolis",
+        fontFamilyFallback: ["RobotoRegular"],
+        fontSize: AppFontSizes.medium,
+        fontWeight: FontWeight.w700,
+        color: AppColor.d);
+  }
 
   static TextStyle inputHint(BuildContext context) {
     return TextStyle(
