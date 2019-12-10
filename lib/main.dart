@@ -24,7 +24,8 @@ void main() async{
 
 
   if(admin != null){
-    runApp(MyApp(route: adminDashboardRoute,));
+    runApp(MyApp(route: TestingRoute,));
+    //runApp(MyApp(route: adminDashboardRoute,));
 
   }else if(staff != null){
     runApp(MyApp(route: TestingRoute,));

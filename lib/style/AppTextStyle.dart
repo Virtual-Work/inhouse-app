@@ -103,6 +103,15 @@ class AppTextStyle{
         fontWeight: FontWeight.w500,
         color: Colors.white);
   }
+
+  static TextStyle headerSmallWhite2(BuildContext context) {
+    return TextStyle(
+        fontFamily: "Metropolis",
+        fontFamilyFallback: ["RobotoRegular"],
+        fontSize: AppFontSizes.smallest,
+        fontWeight: FontWeight.w500,
+        color: Colors.white);
+  }
   static TextStyle headerSmall2(BuildContext context) {
     return TextStyle(
         fontFamily: "Metropolis",
@@ -110,6 +119,24 @@ class AppTextStyle{
         fontSize: AppFontSizes.medium,
         fontWeight: FontWeight.w700,
         color: Colors.white);
+  }
+
+  static TextStyle headerSmaller(BuildContext context) {
+    return TextStyle(
+        fontFamily: "Metropolis",
+        fontFamilyFallback: ["RobotoRegular"],
+        fontSize: AppFontSizes.smallest,
+        fontWeight: FontWeight.w700,
+        color: Colors.white);
+  }
+
+  static TextStyle headerSmall3(BuildContext context) {
+    return TextStyle(
+        fontFamily: "Metropolis",
+        fontFamilyFallback: ["RobotoRegular"],
+        fontSize: AppFontSizes.medium,
+        fontWeight: FontWeight.w700,
+        color: AppColor.thirdColor);
   }
 
   static TextStyle inputHint(BuildContext context) {

@@ -137,4 +137,10 @@ class CustomFunction{
       return false;
     }
   }
+
+  Widget getInformationMessage(String message){
+    return Center(child: Text(message,
+      textAlign: TextAlign.center,
+      style: TextStyle( fontWeight: FontWeight.w900, color: Colors.grey[100]),));
+  }
 }

@@ -68,13 +68,23 @@ class _TesterUIState extends State<TesterUI> {
   todo() {
     String mail;
     startLoading();
-    api.getA().then((v){
-      for(var doc in v.documents){
-       print(doc.data);
-      }
-      stopLoading();
-    });
+//    api.getTestProjectsFuture().then((v){
+////      for(var doc in v.documents){
+////        print(doc.data);
+////      }
+//    print(v.documentID);
+//      stopLoading();
+//    });
 
+  api.addProjectDemo(projectName: 'nePname', createdDate: '',
+      supervisor: 'yeae@gmail.com', projectTitle: 'n1').then((v){
+    if (v != null) {
+      //print(v.documentID);
+    } else {
+      customF.showToast(message: 'Project Successfully Added');
+    }
+    stopLoading();
+  });
   }
 
   startLoading() {

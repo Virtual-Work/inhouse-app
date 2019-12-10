@@ -1,13 +1,18 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:virtualworkng/core/Services/Api.dart';
 import 'package:virtualworkng/locator.dart';
+import 'package:virtualworkng/model/staffDetailsClicked.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/SearchScreen.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/style/AppTextStyle.dart';
 import 'package:virtualworkng/util/customFunctions.dart';
 import 'package:virtualworkng/widgets/ListofStaffWidgets.dart';
+import 'package:virtualworkng/widgets/StaffDetailsWidgets.dart';
 
 var api = locator<Api>();
 var customF = locator<CustomFunction>();
@@ -28,17 +33,25 @@ class _ListofStaffScreenState extends State<ListofStaffScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.nearlyWhite,
-      body: StreamBuilder(
-          stream: api.getListOfStaffs(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError)
-              customF.errorWidget(snapshot.error.toString());
-            return snapshot.hasData
-                ? ListOfStaffWidgets(snapshot.data.documents):
-            customF.loadingWidget();
-          }
+      body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              builder: (context) => StaffDetailsClicked(),
+              child: Container(),
+            ),
+          ],
+        child: StreamBuilder<QuerySnapshot>(
+            stream: api.getListOfStaffs(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError)
+                customF.errorWidget(snapshot.error.toString());
+              return snapshot.hasData
+                  ? ListOfStaffWidgets(snapshot.data.documents):
+              customF.loadingWidget();
+            }
       ),
-      floatingActionButton: FloatingActionButton(
+      ),
+     floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.thirdColor,
         child: Icon(Icons.add, color: AppColor.white,
           size: 19,), onPressed: () {
@@ -47,6 +60,7 @@ class _ListofStaffScreenState extends State<ListofStaffScreen> {
       ),
     );
   }
+
 
   _addStaffUI(BuildContext context) {
     showModalBottomSheet(
@@ -60,6 +74,51 @@ class _ListofStaffScreenState extends State<ListofStaffScreen> {
         });
   }
 
+
+  Widget _floatingCollapsed(){
+    // final clicked = Provider.of<QuerySnapshot>(context);
+
+    // print(clicked.documents);
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColor.nearlyDarkBlue,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0),
+            topRight: Radius.circular(24.0)),
+      ),
+      margin: const EdgeInsets.fromLTRB(24.0, 70.0, 24.0, 0.0),
+      child: Center(
+        child: Text(
+          "This is the collapsed Widget",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _floatingPanel(List<DocumentSnapshot> documents, int index){
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.yellow,
+          borderRadius: BorderRadius.all(Radius.circular(24.0)),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20.0,
+              color: Colors.grey,
+            ),
+          ]
+      ),
+      margin: const EdgeInsets.all(54.0),
+      child: Center(
+          child: StaffDetailsWidgets(email: documents[index].data['Email'].toString(),
+              firstName: documents[index].data['Firstname'].toString(),
+              lastName: documents[index].data['Lastname'].toString(),
+              //pix: documents[index].data['pic'].toString(),
+              privilege: documents[index].data['privilege'].toString(),
+              projects: documents[index].data['Projects']
+          )
+      ),
+    );
+  }
 }
 
 class AddStaff extends StatefulWidget {

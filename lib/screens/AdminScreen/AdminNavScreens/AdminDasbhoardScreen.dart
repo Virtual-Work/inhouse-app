@@ -283,12 +283,12 @@ projectUI(QuerySnapshot snapshot){
             child: GestureDetector(
               child: ListTile(
                 dense: true,
-                trailing: Column(
-                  children: <Widget>[
-                    checkIcon(snapshot.documents[index].data['status']),
-                    Text(checkString(snapshot.documents[index].data['status']))
-                  ],
-                ),
+//                            trailing: Column(
+//                              children: <Widget>[
+//                                checkIcon(snapshot.documents[index].data['status']),
+//                                Text(checkString(snapshot.documents[index].data['status']))
+//                              ],
+//                            ),
                 leading: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Material(
@@ -312,36 +312,28 @@ projectUI(QuerySnapshot snapshot){
                     ),
                   ),
                 ),
-                title: Row(
-                  children: <Widget>[
-                    Text(
-                      snapshot.documents[index].data['Title'] == null ? '' : snapshot.documents[index].data['Title'],
-                      style: TextStyle(
-                          inherit: true,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12.0),
-                    ),
-                    SizedBox(width: 50.0,),
-
-                  ],
+                title: Text(
+                    snapshot.documents[index].documentID == null ? '' : snapshot.documents[index].documentID,
+                    style: AppTextStyle.headerSmall3(context)
                 ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(snapshot.documents[index].data['DateCreated'] == null ? ''
-                          : snapshot.documents[index].data['DateCreated'],
-                          style: TextStyle(
-                              inherit: true,
-                              fontSize: 12.0,
-                              color: Colors.black45)),
-                      SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                ),
+//                            subtitle: Padding(
+//                              padding: const EdgeInsets.only(top: 8.0),
+//                              child: Row(
+//                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                                children: <Widget>[
+//                                  Text(snapshot.documents[index].data['DateCreated'] == null ? ''
+//                                      : snapshot.documents[index].data['DateCreated'],
+//                                      style: TextStyle(
+//                                          inherit: true,
+//                                          fontSize: 12.0,
+//                                          color: Colors.black45)),
+//                                  SizedBox(
+//                                    width: 10,
+//                                  ),
+//                                ],
+//                              ),
+//                            ),
+                enabled: true,
               ),
               onTap: (){
                 customF.detailsDialog(title:snapshot.documents[index].data['Title'],

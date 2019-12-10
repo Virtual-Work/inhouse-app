@@ -97,12 +97,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           Text('Privilege: ${dataDoc.documents[index].data['privilege'].toString()}',
                             style: AppTextStyle.snackbar(context),),
                           GestureDetector(child: Icon(FontAwesomeIcons.edit), onTap: (){
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-//                                  return UpdateStaffDetails(previlege: documents[index].data['privilege'].toString(),
-//                                    Email: documents[index].data['Email'],);
-                                });
+//                            showDialog(
+//                                context: context,
+//                                builder: (BuildContext context) {
+////                                  return UpdateStaffDetails(previlege: documents[index].data['privilege'].toString(),
+////                                    Email: documents[index].data['Email'],);
+//                                });
                           },)
                         ],
                       ),
@@ -128,10 +128,6 @@ class _SearchScreenState extends State<SearchScreen> {
           setState(() {
             dataDoc = doc;
           });
-          for(int i = 0; i < doc.documents.length; ++i){
-            //print(doc.documents[i].data);
-            queryResultSet.add(doc.documents[i].data);
-          }
         });
     }else{
       temperatureSearchStore = [];
@@ -141,6 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
             temperatureSearchStore.add(v);
           });
         }
+
       });
     }
   }

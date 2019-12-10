@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListofArchieveScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListofStaffsScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/SearchScreen.dart';
 import 'package:virtualworkng/style/AppColor.dart';
@@ -42,7 +43,7 @@ class _StaffTabsState extends State<StaffTabs> {
         body: TabBarView(
           children: <Widget>[
             ListofStaffScreen(),
-            ListofStaffScreen(),
+            ListofArchieveScreen(),
           ],
         ),
       ),

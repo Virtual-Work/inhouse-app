@@ -8,6 +8,7 @@ import 'package:virtualworkng/model/StaffReportModel.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListOfProjectsScreen.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/style/AppTextStyle.dart';
+import 'package:virtualworkng/widgets/deleteProjectDialog.dart';
 
 class ListOfProjectCards extends StatefulWidget {
   final AnimationController animationController;
@@ -54,12 +55,14 @@ class _ListOfProjectCardsState extends State<ListOfProjectCards> {
                       child: Container(
                           child: ListTile(
                             dense: true,
-                            trailing: Column(
-                              children: <Widget>[
-                                checkIcon(snapshot.documents[index].data['status']),
-                                Text(checkString(snapshot.documents[index].data['status']))
-                              ],
-                            ),
+                            trailing: GestureDetector(child: Icon(Icons.delete, color: Colors.red,),
+                              onTap: (){
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return deleteProjectDialog(projectName: snapshot.documents[index].documentID.toString(),);
+                                    });
+                              },),
                             leading: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: Material(
@@ -84,29 +87,26 @@ class _ListOfProjectCardsState extends State<ListOfProjectCards> {
                               ),
                             ),
                             title: Text(
-                              snapshot.documents[index].data['Title'] == null ? '' : snapshot.documents[index].data['Title'],
-                              style: TextStyle(
-                                  inherit: true,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 12.0),
+                              snapshot.documents[index].documentID == null ? '' : snapshot.documents[index].documentID,
+                              style: AppTextStyle.headerSmall3(context)
                             ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(snapshot.documents[index].data['DateCreated'] == null ? ''
-                                      : snapshot.documents[index].data['DateCreated'],
-                                      style: TextStyle(
-                                          inherit: true,
-                                          fontSize: 12.0,
-                                          color: Colors.black45)),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
+//                            subtitle: Padding(
+//                              padding: const EdgeInsets.only(top: 8.0),
+//                              child: Row(
+//                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                                children: <Widget>[
+//                                  Text(snapshot.documents[index].data['DateCreated'] == null ? ''
+//                                      : snapshot.documents[index].data['DateCreated'],
+//                                      style: TextStyle(
+//                                          inherit: true,
+//                                          fontSize: 12.0,
+//                                          color: Colors.black45)),
+//                                  SizedBox(
+//                                    width: 10,
+//                                  ),
+//                                ],
+//                              ),
+//                            ),
                             enabled: true,
                           )
                       ),

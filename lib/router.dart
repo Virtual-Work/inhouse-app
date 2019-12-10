@@ -15,6 +15,7 @@ import 'package:virtualworkng/screens/Wrapper.dart';
 import 'package:virtualworkng/ui/AdminRegister1.dart';
 import 'package:virtualworkng/ui/AdminRegisterPage.dart';
 import 'package:virtualworkng/ui/customDrawer/AdminhomeDrawer.dart';
+import 'package:virtualworkng/widgets/StaffTabs.dart';
 import 'screens/AdminScreen/AdminNavScreens/ListofStaffsScreen.dart';
 
 ////sending dat to next screen
@@ -48,7 +49,7 @@ class Router {
        return MaterialPageRoute(builder: (_) => AdminRegister1());
 
        case TestingRoute:
-       return MaterialPageRoute(builder: (_) => LoginScreen());
+       return MaterialPageRoute(builder: (_) => AdminMainScreen());
 
       case countdownRoute:
         return MaterialPageRoute(builder: (_) => CountDownTimer());
