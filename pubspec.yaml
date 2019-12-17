@@ -54,6 +54,7 @@ dependencies:
   flutter_speed_dial: ^1.2.5
   easy_dialogs: ^1.0.0
   firebase_storage: ^3.0.11
+  date_range_picker: ^1.0.6
 
 #  firebase_crashlytics: ^0.1.1+2
    

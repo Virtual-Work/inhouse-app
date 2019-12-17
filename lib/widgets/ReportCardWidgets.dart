@@ -8,11 +8,12 @@ import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/style/AppTextStyle.dart';
 
+//******************************************************************************************************************
+//*******************Report UI or Widget**********************************
+///**********************************************************************************************************************
 class ReportCardWidget extends StatefulWidget {
   final AnimationController animationController;
   final Animation animation;
-
-  // final formatAmounts = new NumberFormat("#,##0.00", "en_US");
 
   const ReportCardWidget({Key key, this.animationController, this.animation})
       : super(key: key);
@@ -144,6 +145,7 @@ class ReportView extends StatelessWidget {
                   )
               ),
               onTap: (){
+                //Go to Submit Report UI
                 Navigator.push(context,
                   MaterialPageRoute(
                     builder: (context) => SubmitReportUI(projectSelected: documentID),

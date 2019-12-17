@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/model/StafftransactionsModel.dart';
 import 'package:virtualworkng/style/AppColor.dart';
+import 'package:virtualworkng/util/customFunctions.dart';
+
+var customF = locator<CustomFunction>();
 
 class TransactionCardWidget extends StatefulWidget {
   final AnimationController animationController;
@@ -44,8 +48,8 @@ class _TransactionCardWidgetState extends State<TransactionCardWidget> {
                           dense: true,
                           trailing: Column(
                             children: <Widget>[
-                              checkIcon(getTransact()[index].network),
-                              Text(checkString(getTransact()[index].network))
+                              customF.checkIcon(getTransact()[index].network),
+                              Text(customF.checkString(getTransact()[index].network))
                             ],
                           ),
                           leading: Padding(
@@ -58,7 +62,7 @@ class _TransactionCardWidgetState extends State<TransactionCardWidget> {
                                 height: 50,
                                 width: 50,
                                 decoration: BoxDecoration(
-                                  color: ChangeColor(getTransact()[index].network),
+                                  color: customF.ChangeColor(getTransact()[index].network),
                                   shape: BoxShape.circle,
                                 ),
                                 child: ClipRRect(
@@ -104,7 +108,7 @@ class _TransactionCardWidgetState extends State<TransactionCardWidget> {
                         )
                     ),
                   )
-                      : getInformationMessage('No Latest Transaction')),
+                      :customF.getInformationMessage('No Latest Transaction')),
                 );
               },
               separatorBuilder: (context, index) {
@@ -118,147 +122,6 @@ class _TransactionCardWidgetState extends State<TransactionCardWidget> {
 
   }
 
-  Color ChangeColor(String network) {
 
-    switch (network) {
-      case 'MTN':
-        return Color(0xFFB6900B);
-        break;
 
-      case 'GLO':
-        return Color(0xFF006E52);
-        break;
-
-      case 'AIRTEL':
-        return Color(0xFFED1B24);
-        break;
-
-      case 'GLO':
-        return Color(0xFF4E8A41);
-        break;
-
-      case 'gift':
-        return Color(0xFFFB8C0C);
-        break;
-
-      case 'GOTV':
-        return Color(0xFFff310f);
-        break;
-
-      case 'dstv':
-        return Color(0xFF0098DA);
-        break;
-
-      case 'startimes':
-        return Color(0xFFEC690F);
-        break;
-
-        case 'WAEC':
-        return Colors.yellow;
-        break;
-
-        case 'SMILE':
-         return Colors.lightGreen;
-        break;
-
-        case 'Bank':
-          return Colors.pink;
-        break;
-
-      default:
-        return Colors.purpleAccent;
-    }
-  }
-
-  Icon checkIcon(String network) {
-    switch (network) {
-      case 'MTN':
-        return Icon(
-          Icons.error_outline,
-          size: 22.0,
-          color: Color(0xFFB6900B),
-        );
-        break;
-
-      case 'GLO':
-        return  Icon(
-          Icons.done_all,
-          size: 22.0,
-          color: Color(0xFF006E52),
-        );
-
-        break;
-
-      case 'AIRTEL':
-        return  Icon(
-          Icons.error,
-          size: 22.0,
-          color: Color(0xFFED1B24),
-        );
-        break;
-
-      default:
-        return Icon(
-          Icons.account_balance_wallet,
-          size: 22.0,
-          color: AppColor.primaryColorDark,
-        );
-    }
-  }
-
-  String checkString(String network) {
-    switch (network) {
-      case 'MTN':
-        return 'Pending';
-        break;
-
-      case 'GLO':
-        return  'Delivered';
-
-        break;
-
-      case 'AIRTEL':
-        return  'Failed';
-        break;
-
-      default:
-
-        return '';
-    }
-  }
-
-  int TransacStatus(String status) {
-    switch (status) {
-      case 'Successful':
-        return 0;
-        break;
-
-      case 'Pending / Failed':
-        return 1;
-        break;
-    }
-  }
-
-  Widget getStatusWidget (String status){
-
-    if(TransacStatus(status) == 1){
-      return Icon(
-        Icons.error,
-        size: 22.0,
-        color: Colors.red,
-      );
-    }else{
-      return Icon(
-        Icons.check,
-        size: 22.0,
-        color: Colors.green,
-      );
-    }
-  }
-
-  Widget getInformationMessage(String message){
-    return Center(child: Text(message,
-      textAlign: TextAlign.center,
-      style: TextStyle( fontWeight: FontWeight.w900, color: Colors.grey[100]),));
-  }
 }

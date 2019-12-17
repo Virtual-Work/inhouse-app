@@ -10,6 +10,7 @@ import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/DisputesScreen
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListOfProjectsScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListofStaffsScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ReportScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffDashboard.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/ReportTabs.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffDisputeScreen.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffProfilleScreen.dart';
@@ -115,7 +116,7 @@ class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderSt
   switchBody(){
 //    HOME, E-Wallet,  Disputes,  Report, Account,
     if(_selectedIndex == 0){
-      return AdminDashboard(animationController); //    HOME,
+      return StaffDashboard(animationController); //    HOME,
      // return TesterUI(); //    HOME,
 
     }else if(_selectedIndex == 1){

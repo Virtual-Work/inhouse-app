@@ -1,3 +1,6 @@
+//******************************************************************************************************************
+//*******************Display List of Project and click on project name to submit Report**********************************
+///**********************************************************************************************************************
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,12 +12,11 @@ import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/util/customFunctions.dart';
 import 'package:virtualworkng/widgets/ReportCardWidgets.dart';
-import 'package:virtualworkng/widgets/StaffWalletView.dart';
-import 'package:virtualworkng/widgets/TransactionCard.dart';
 
 var customF = locator<CustomFunction>();
 var api = locator<Api>();
 
+//Display List of Project and click on project name to submit Report
 class StaffReportScreen extends StatefulWidget {
   AnimationController animationController;
 
@@ -69,6 +71,7 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
 
   void addAllListData() {
     var count = 5;
+    //TextView UI with Animation
     listViews.add(
       TitleView(
         titleTxt: 'Tap on the Project to Submit Report',
@@ -78,6 +81,7 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
         animationController: widget.animationController,
       ),
     );
+    //Report View UI with Animation
     listViews.add(
       ReportCardWidget(
         animation: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -86,6 +90,8 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
         animationController: widget.animationController,
       ),
     );
+
+    // Adding a space btw UI
     listViews.add(
         SizedBox(height: 100,)
     );

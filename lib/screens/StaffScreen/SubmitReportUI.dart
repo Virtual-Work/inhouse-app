@@ -1,14 +1,19 @@
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:virtualworkng/core/Services/Api.dart';
 import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/style/AppTextStyle.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:virtualworkng/util/customFunctions.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 var customF = locator<CustomFunction>();
 var api = locator<Api>();
+//******************************************************************************************************************
+//*******************SubmitReportUI**********************************
+///**********************************************************************************************************************
 class SubmitReportUI extends StatefulWidget {
   final String projectSelected;
 
@@ -28,6 +33,7 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
   List _listofTaskUI = List();
   List<TextEditingController> controller;
   Map<String, String> inputMap = new Map(); //taskName,(key) while hours(value)
+  bool isReportPeriodSelected = false;
 
   var textEditingControllers = <TextEditingController>[];
 
@@ -76,170 +82,132 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                   padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                   child: Column(
                     children: <Widget>[
-                      Text('Report Period', style: AppTextStyle.emailheaderSmall(context),),
-                      SizedBox(height: 10.0,),
-                      Row(
-                        children: <Widget>[
-                          RaisedButton(
-                            child: Text('From', style: AppTextStyle.headerSmallWhite(context),),
-                            color: AppColor.teal,
-                            onPressed: (){
-                              DatePicker.showDatePicker(context,
-                                showTitleActions: true,
-                                locale: LocaleType.en,
-                                onChanged: (date) {
-                                }, onConfirm: (date) {
-                                  setState(() {
-                                    fromDate = '${date.day} - ${date.month} - ${date.year}';
-                                  });
-                                }, currentTime: DateTime.now(),);
-                            },
-                          ),
-                          SizedBox(width: 20.0,),
-                          Text(fromDate == null ? '' : fromDate, style: AppTextStyle.h2(context),),
-                        ],
+                      RaisedButton(
+                        child: Text('Choose Report Period', style: AppTextStyle.headerSmaller(context),),
+                        color: AppColor.teal,
+                        onPressed: ()async{
+                          final List<DateTime> picked = await DateRagePicker.showDatePicker(
+                              context: context,
+                              initialFirstDate: new DateTime.now(),
+                              initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
+                              firstDate: new DateTime(2015),
+                              lastDate: new DateTime(2020)
+                          );
+                          if (picked != null && picked.length == 2) {
+                            setState(() {
+                              fromDate = format(picked[0]);
+                              toDate = format(picked[1]);
+                              isReportPeriodSelected = true; //Allow other UI to show, so that i can enter tasks and submit
+                            });
+                          }
+                        },
                       ),
-                      Row(
-                        children: <Widget>[
-                          RaisedButton(
-                            child: Text('To', style: AppTextStyle.headerSmallWhite(context),),
-                            color: AppColor.teal,
-                            onPressed: (){
-                              DatePicker.showDatePicker(context,
-                                showTitleActions: true,
-                                locale: LocaleType.en,
-                                onChanged: (date) {
-                                }, onConfirm: (date) {
-                                  setState(() {
-                                    toDate = '${date.day} - ${date.month} - ${date.year}';
-                                  });
-                                }, currentTime: DateTime.now(),);
-                            },
-                          ),
-                          SizedBox(width: 20.0,),
-                          Text(toDate == null ? '' : toDate, style: AppTextStyle.h2(context),),
-                        ],
-                      ),
-//                      Row(
-//                        children: <Widget>[
-//                          FlatButton(
-//                              onPressed: () {
-//                                DatePicker.showDatePicker(context,
-//                                  showTitleActions: true,
-//                                  onChanged: (date) {
-//                                    setState(() {
-//                                      toDate = date.toString();
-//                                    });
-//                                    print('change $date');
-//                                  }, onConfirm: (date) {
-//                                    setState(() {
-//                                      toDate = date.toString();
-//                                    });
-//                                  }, currentTime: DateTime.now(),);
-//                              },
-//                              child: Text(
-//                                'To', style: TextStyle(color: Colors.blue),
-//                              )),
-//                          Text(fromDate == null ? '' : fromDate),
-//                        ],
-//                      ),
+                      Text(fromDate == null ? '' : 'From', style: AppTextStyle.headerSmall3(context),),
+                      Text(fromDate == null ? '' : fromDate, style: AppTextStyle.h2(context),),
+                      Text(toDate == null ? '' : 'To', style: AppTextStyle.headerSmall3(context),),
+                      Text(toDate == null ? '' : toDate, style: AppTextStyle.h2(context),),
                     ],
                   )
               ),
-              Container(
-                margin: EdgeInsets.only(top: 10, bottom: 15),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Text('Task Number', style: AppTextStyle.error(context)),
-                      margin: EdgeInsets.only(bottom: 15),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          color: AppColor.thirdColor,
-                          width: 50,
-                          height: 50,
-                          child: OutlineButton(
-                            onPressed: () {
-                              setState(() {
-                                _quantity += 1;
-                                controller.add(new TextEditingController());
-                                _listofTaskUI.add(_quantity);
-                              });
-                            },
-                            child: Icon(Icons.add, color: Colors.white,),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(_quantity.toString(), style: AppTextStyle.h2(context)),
-                        ),
-                        Container(
-                          color: AppColor.thirdColor,
-                          width: 50,
-                          height: 50,
-                          child: OutlineButton(
-                            onPressed: () {
-                              setState(() {
-                                if(_quantity == 1) return;
-                                _quantity -= 1;
-                                controller.removeAt(_quantity);
-                                _listofTaskUI.removeAt(_quantity);
-                              });
-                            },
-                            child: Icon(Icons.remove, color: Colors.white,),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                child: Text('Tasks', style: AppTextStyle.error(context)),
-                margin: EdgeInsets.only(bottom: 1, top: 10),
-              ),
-//              Column(
-//                children: List.generate(_listofTaskUI.length,(index){
-//                  return taskUI(_listofTaskUI[index]);
-//                }),
-//              ),
-              Column(
-                children: textFields
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextField(
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'Total time used per week',
-                    labelStyle: AppTextStyle.inputLabelStyle(context),
-                    hintStyle: TextStyle(
-                        fontFamily: "WorkSansSemiBold", fontSize: 16.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.0),
-              processing ? CircularProgressIndicator(backgroundColor: AppColor.deep00,)
-                  : RaisedButton(
-                child: Text("Submit Report"),
-                splashColor: AppColor.orange,
-                elevation: 10,
-                animationDuration: Duration(seconds: 5),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)
-                ),
-                color: AppColor.primaryColorDark,
-                textColor: Colors.white,
-                onPressed: (){
-                      showData();
-                },
-              ),
-              SizedBox(height: 30.0),
+              //Hide this UI if Report date has not been selected
+             Visibility(
+               child: Column(
+                 children: <Widget>[
+                   Container(
+                     margin: EdgeInsets.only(top: 10, bottom: 15),
+                     child: Column(
+                       children: <Widget>[
+                         Container(
+                           child: Text('Task Number', style: AppTextStyle.error(context)),
+                           margin: EdgeInsets.only(bottom: 15),
+                         ),
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           children: <Widget>[
+                             Container(
+                               color: AppColor.thirdColor,
+                               width: 50,
+                               height: 50,
+                               child: OutlineButton(
+                                 onPressed: () {
+                                   setState(() {
+                                     _quantity += 1;
+                                     controller.add(new TextEditingController());
+                                     _listofTaskUI.add(_quantity);
+                                   });
+                                 },
+                                 child: Icon(Icons.add, color: Colors.white,),
+                               ),
+                             ),
+                             Container(
+                               margin: EdgeInsets.only(left: 20, right: 20),
+                               child: Text(_quantity.toString(), style: AppTextStyle.h2(context)),
+                             ),
+                             Container(
+                               color: AppColor.thirdColor,
+                               width: 50,
+                               height: 50,
+                               child: OutlineButton(
+                                 onPressed: () {
+                                   setState(() {
+                                     if(_quantity == 1) return;
+                                     _quantity -= 1;
+                                     controller.removeAt(_quantity);
+                                     _listofTaskUI.removeAt(_quantity);
+                                   });
+                                 },
+                                 child: Icon(Icons.remove, color: Colors.white,),
+                               ),
+                             )
+                           ],
+                         )
+                       ],
+                     ),
+                   ),
+                   Container(
+                     child: Text('Tasks', style: AppTextStyle.error(context)),
+                     margin: EdgeInsets.only(bottom: 1, top: 10),
+                   ),
+                   Column(
+                     children: List.generate(_listofTaskUI.length,(index){
+                       return taskUI(_listofTaskUI[index]);
+                     }),
+                   ),
+                   Padding(
+                     padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                     child: TextField(
+                       keyboardType: TextInputType.text,
+                       decoration: InputDecoration(
+                         border: const UnderlineInputBorder(),
+                         labelText: 'Total time used per week',
+                         labelStyle: AppTextStyle.inputLabelStyle(context),
+                         hintStyle: TextStyle(
+                             fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                       ),
+                     ),
+                   ),
+                   SizedBox(height: 20.0),
+                   processing ? CircularProgressIndicator(backgroundColor: AppColor.deep00,)
+                       : RaisedButton(
+                     child: Text("Submit Report"),
+                     splashColor: AppColor.orange,
+                     elevation: 10,
+                     animationDuration: Duration(seconds: 5),
+                     shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(20.0)
+                     ),
+                     color: AppColor.primaryColorDark,
+                     textColor: Colors.white,
+                     onPressed: (){
+                       showData();
+                     },
+                   ),
+                   SizedBox(height: 30.0),
+                 ],
+               ),
+               visible: isReportPeriodSelected,
+             ),
             ],
           ),
         ),
@@ -301,11 +269,15 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
   }
 
   submitReportApi(){
-
     if(fromDate.isEmpty && toDate.isEmpty){
       customF.showToast(message: 'Date required');
     }else{
 
     }
+  }
+  format(var now){
+    var formatter = new DateFormat('EEEE, MMMM dd, yyyy.');
+    String formatted = formatter.format(now);
+   return formatted;
   }
 }

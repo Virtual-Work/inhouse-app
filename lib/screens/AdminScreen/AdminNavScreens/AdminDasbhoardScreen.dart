@@ -28,6 +28,7 @@ var series = [
     data: data,
   ),
 ];
+
 class AdminDashboard extends StatefulWidget {
    AnimationController animationController;
    AdminDashboard(this.animationController);

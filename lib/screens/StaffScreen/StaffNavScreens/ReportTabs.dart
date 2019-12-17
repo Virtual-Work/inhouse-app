@@ -46,8 +46,8 @@ class _ReportTabsState extends State<ReportTabs> {
         ),
         body: TabBarView(
           children: <Widget>[
-            StaffReportScreen(widget.animationController),
-            ViewAllReportScreen(widget.animationController),
+            StaffReportScreen(widget.animationController), //Display List of Project and click on project name to submit Report
+            ViewAllReportScreen(widget.animationController), //Display List of Submitted Reports. including the pending, complete etc
           ],
         ),
       ),
