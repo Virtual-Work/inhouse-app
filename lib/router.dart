@@ -2,21 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:virtualworkng/TesterUI.dart';
 import 'package:virtualworkng/enum/constants.dart';
-import 'package:virtualworkng/screens/AdminMainScreen.dart';
-import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListOfProjectsScreen.dart';
-import 'package:virtualworkng/screens/AdminScreen/AdminnavHomeScreen.dart';
+import 'package:virtualworkng/screens/AdminScreen/AdminMainScreen.dart';
 import 'package:virtualworkng/screens/Countdown.dart';
 import 'package:virtualworkng/screens/LoginScreen.dart';
-import 'package:virtualworkng/screens/MenuScreen.dart';
-import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/ReportScreen.dart';
-import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffWalletUI.dart';
-import 'package:virtualworkng/screens/StaffScreen/StaffnavigationHomeScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffMainScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/screens/Wrapper.dart';
-import 'package:virtualworkng/ui/AdminRegister1.dart';
+import 'package:virtualworkng/ui/StaffRegisteration.dart';
 import 'package:virtualworkng/ui/AdminRegisterPage.dart';
-import 'package:virtualworkng/ui/customDrawer/AdminhomeDrawer.dart';
-import 'package:virtualworkng/widgets/StaffTabs.dart';
-import 'screens/AdminScreen/AdminNavScreens/ListofStaffsScreen.dart';
 
 ////sending dat to next screen
 ////Navigator.pushNamed(context, feedRoute, arguments: 'Data from home');
@@ -46,13 +39,20 @@ class Router {
         return MaterialPageRoute(builder: (_) => AdminMainScreen());
 
         case staffDashboardRoute:
-       return MaterialPageRoute(builder: (_) => AdminRegister1());
+       return MaterialPageRoute(builder: (_) => StaffMainScreen()); //StaffMainScreen()
+
+      case staffRegister:
+        return MaterialPageRoute(builder: (_) => AdminRegisterPage());
 
        case TestingRoute:
-       return MaterialPageRoute(builder: (_) => AdminMainScreen());
+       return MaterialPageRoute(builder: (_) => LoginScreen());
 
       case countdownRoute:
         return MaterialPageRoute(builder: (_) => CountDownTimer());
+
+        case submitReportRoute:
+        var data = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => SubmitReportUI());
     }
   }
 }

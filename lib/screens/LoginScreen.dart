@@ -255,13 +255,13 @@ class _LoginScreenState extends State<LoginScreen> {
           RoundedRecButton(title: 'Let\'s get Started', 
           gradientColor: [Color(0xFFffc107),  Color(0xFFff6d00)])),
            onTap: (){
-             //sigIn();
-               adminLogin();
-//             if(holdEmail == null){
-//               staffLogin();
-//             }else{
-//               createPassword();
-//             }
+          if(hideEmailUI){
+            loginApi();
+          }else{
+            createPassword();
+          }
+
+
 
           },
         )
@@ -329,114 +329,64 @@ stopLoading(){
   });
 }
 
-adminLogin()async{
-    String inputmail = emailController.text.trim();
-    String inputpass = passController.text.trim();
+loginApi()async{
+  String enteredEmail = emailController.text.trim();
+  String enterPass = passController.text.trim();
 
-    if(inputmail.isEmpty || inputpass.isEmpty) {
-      customF.showToast(message: 'Empty field detected');
+  if(enteredEmail.isEmpty || enterPass.isEmpty) {
+    customF.showToast(message: 'Empty field detected');
 
-    }else if(!customF.isVirtualWorkNGMail(mail: inputmail)){
-      customF.showToast(message: 'Invalid Email');
+  }else if(!customF.isVirtualWorkNGMail(mail: enteredEmail)){
+    customF.showToast(message: 'Invalid Email');
+
     }else{
-      String mail, pass;
+      String serverEmail, serverPassword;
+      bool isAdmin; //checking if the login user is an Admin or staff
       startLoading();
-      api.getA().then((v){
-        if(v != null){
+      api.authentication(email:enteredEmail, password: enterPass).then((v){
+        if(v.documents.isEmpty){
+          customF.showToast(message: 'Login details not found, Contact the Admin to Register');
+          stopLoading();
+        }else{
           for(var doc in v.documents){
-            mail = doc.data['AdminEmail'];
-            pass = doc.data['AdminPassword'];
-//         print(doc.data['AdminPassword']);
-          }
+            serverEmail = doc.data['Email'];
+            serverPassword = doc.data['Password'];
+            isAdmin = doc.data['IsAdmin'];
+            if(enteredEmail == serverEmail && enterPass == serverPassword) {//Valid login details
+              if(isAdmin){ //This login User is an Admin, show Admin UI
+                print('Am an Admin');
+               customF.saveAdminInfo(mail: serverEmail); //Save to AdminInfo
+               stopLoading();
+               Navigator.pushReplacementNamed(context, adminDashboardRoute);
+              }else{ //Not an Admin, Show normal user UI.
+                print('Am not an Admin');
+               customF.saveStaffInfo(mail: serverEmail); //Save to Staff Info
+                stopLoading();
+              Navigator.pushReplacementNamed(context, staffDashboardRoute);
+              }
 
-          if(mail != null){
-            if(mail == inputmail && pass == inputpass){
-              customF.saveAdminInfo(mail: mail);
+
+            }else if(serverEmail != null && serverPassword == null) {
+              // print('Only Email is valid but not yet password');
+              customF.showToast(message: 'Success, Please set a Password');
+              setState(() {
+                holdEmail = serverEmail; //hold the email value for me
+                hideEmailUI = false; //Display Entering Password UI
+              });
               stopLoading();
-                Navigator.pushReplacementNamed(context, adminDashboardRoute);
+
             }else{
               addingTimer(); //adding timer
               customF.showToast(message: 'Invalid Login Details');
               stopLoading();
             }
-          }else{
-            customF.showToast(message: 'Invalid Login Details');
-            stopLoading();
           }
-
-        }else{
-          customF.showToast(message: 'Error, please retry');
-          print('Null Output');
-          stopLoading();
         }
       });
     }
 
 }
 
-staffLogin(){
-    String mail = emailController.text.trim();
-    String severMail;
-    startLoading();
-    api.staffSignIn(email: mail).then((v){
-      if(v != null){
-        for(var doc in v.documents){
-          severMail = doc.data['Email'];
-         print(doc.data['Email']);
-        }
-        if(severMail != null){
-          if(mail == severMail){
-            customF.showToast(message: 'Success');
-            setState(() {
-              holdEmail = severMail; //hold the email value for me
-              hideEmailUI = false; //Display Entering Password UI
-            });
-            stopLoading();
-          }else{
-            customF.showToast(message: 'Invalid Login Details');
-            stopLoading();
-          }
-        }else{
-          customF.showToast(message: 'Invalid Login Details');
-          stopLoading();
-        }
-
-      }else{
-        customF.showToast(message: 'Error, please retry');
-        print('Null Output');
-        stopLoading();
-      }
-    });
-//    bool istrue;
-//  String inputmail = emailController.text.trim();
-//  if(inputmail.isEmpty){
-//    customF.showToast(message: 'Empty field detected');
-//  }else{
-//    String mail;
-//
-//    //print(.documents[0].data);
-//
-////      if(v != null){
-////
-////        stopLoading();
-//////        for(int i =0; i < v.documents.length; i++){
-//////          if(v.documents[i].documentID == 'newads.xom'){
-//////            istrue = true;
-//////            print(v.documents[i].documentID);
-//////          }else{
-//////            istrue = false;
-//////            print('No data found');
-//////          }
-//////        }
-////      }else{
-////        customF.showToast(message: 'Error, please retry');
-////        print('Null Output');
-////        stopLoading();
-////      }
-//   // });
-//  }
-
-}
 
 createPassword(){
   String pass1 = passController.text.trim();
@@ -456,7 +406,7 @@ createPassword(){
      } else {
        stopLoading();
        customF.saveStaffInfo(mail: holdEmail);// save info sharePref
-       Navigator.pushReplacementNamed(context, staffDashboardRoute);
+       Navigator.pushReplacementNamed(context, staffRegister);
      }
    });
   }

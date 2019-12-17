@@ -156,4 +156,13 @@ class AppTextStyle{
         color: Colors.grey);
   }
 
+  static TextStyle h2(BuildContext context) {
+    return TextStyle(
+        fontFamily: "Metropolis",
+        fontFamilyFallback: ["RobotoRegular"],
+        fontSize: AppFontSizes.large,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87);
+  }
+
 }

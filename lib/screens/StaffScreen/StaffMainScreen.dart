@@ -10,6 +10,11 @@ import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/DisputesScreen
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListOfProjectsScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ListofStaffsScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/ReportScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/ReportTabs.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffDisputeScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffProfilleScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffReportScreen.dart';
+import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffWalletUI.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/TitleView.dart';
 import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/style/AppColor.dart';
@@ -19,12 +24,12 @@ import 'package:virtualworkng/widgets/StaffWalletView.dart';
 import 'package:virtualworkng/widgets/TransactionCard.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:virtualworkng/widgets/noInternet.dart';
-class AdminMainScreen extends StatefulWidget {
+class StaffMainScreen extends StatefulWidget {
   @override
-  _AdminMainScreenState createState() => _AdminMainScreenState();
+  _StaffMainScreenState createState() => _StaffMainScreenState();
 }
 
-class _AdminMainScreenState extends State<AdminMainScreen> with TickerProviderStateMixin{
+class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderStateMixin{
   AnimationController animationController;
   Animation<double> topBarAnimation;
 
@@ -79,26 +84,26 @@ class _AdminMainScreenState extends State<AdminMainScreen> with TickerProviderSt
               inactiveColor: AppColor.orange,
             ),
             BottomNavyBarItem(
-              icon: Icon(FontAwesomeIcons.user, color: Colors.orange,),
-              title: Text('Staff'),
+              icon: Icon(FontAwesomeIcons.wallet, color: Colors.orange,),
+              title: Text('E-Wallet'),
               activeColor: AppColor.thirdColor,
               inactiveColor: AppColor.orange,
             ),
             BottomNavyBarItem(
-              icon: Icon(FontAwesomeIcons.laugh),
-              title: Text('Disputes'),
+              icon: Icon(FontAwesomeIcons.fileAlt),
+              title: Text('Report'),
               activeColor: AppColor.thirdColor,
               inactiveColor: AppColor.orange,
             ),
             BottomNavyBarItem(
-              icon: Icon(FontAwesomeIcons.fileImage),
-              title: Text('Projects'),
+              icon: Icon(FontAwesomeIcons.discord),
+              title: Text('Dispute'),
               activeColor: AppColor.thirdColor,
               inactiveColor: AppColor.orange,
             ),
             BottomNavyBarItem(
-              icon:  Icon(CommunityMaterialIcons.reply),
-              title: Text('Reports'),
+              icon:  Icon(FontAwesomeIcons.user),
+              title: Text('Account'),
               activeColor: AppColor.thirdColor,
               inactiveColor: AppColor.orange,
             ),
@@ -108,23 +113,22 @@ class _AdminMainScreenState extends State<AdminMainScreen> with TickerProviderSt
   }
 
   switchBody(){
-//    HOME, Users,  Disputes,  Withdrawals, Reports,s
+//    HOME, E-Wallet,  Disputes,  Report, Account,
     if(_selectedIndex == 0){
       return AdminDashboard(animationController); //    HOME,
+     // return TesterUI(); //    HOME,
 
     }else if(_selectedIndex == 1){
-     // return ListofStaffScreen(); //Users,
-      return StaffTabs(); //Users,  List of staffs Screen
+      return StaffWallet(animationController); //E-Wallet
 
-    }else if(_selectedIndex == 2){ //Disputes Screen
-      return DisputeScreen();
+    }else if(_selectedIndex == 2){ //Report
+      return ReportTabs(animationController);
 
-    }else if(_selectedIndex == 3){ //Withdrawals Screen
-      return ListOfProjectScreen();
+    }else if(_selectedIndex == 3){ //Disputes
+      return StaffDisputeScreen(animationController);
 
     }else if(_selectedIndex == 4){
-      return ReportScreen(); //Report Screen
-      //return TesterUI(); //Report Screen
+      return StaffProfileScreen(); //Account
     }
   }
 }

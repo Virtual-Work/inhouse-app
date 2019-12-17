@@ -3,7 +3,7 @@
 //import 'package:virtualworkng/style/AppColor.dart';
 //import 'package:virtualworkng/style/AppFontSizes.dart';
 //import 'package:virtualworkng/style/AppTextStyle.dart';
-//import 'package:virtualworkng/ui/AdminRegister1.dart';
+//import 'package:virtualworkng/ui/StaffRegisteration.dart';
 //
 //class Test extends StatefulWidget {
 //

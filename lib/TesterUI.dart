@@ -66,16 +66,19 @@ class _TesterUIState extends State<TesterUI> {
   }
 
   todo() {
-    String mail;
     startLoading();
-
-  api.getTestProjectsFuture().then((v){
-   //for(var doc in v.documents){
-     print(v.documents[2].data);
-   //}
+  api.testPassword().then((v){
+       print(v);
+    if (v != null) {
+      // print(v.documentID);
+      stopLoading();
+    } else {
+      stopLoading();
+      customF.showToast(message: 'Successfully Update');
+      Navigator.pop(context);
+    }
   });
   }
-
   startLoading() {
     setState(() {
       processing = true;

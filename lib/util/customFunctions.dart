@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +34,7 @@ class CustomFunction{
 
   loadingWidget(){
     return Center(
-      child: CircularProgressIndicator()
+      child: SpinKitPumpingHeart(color: AppColor.deep, duration: new Duration(seconds: 1),),
     );
   }
 

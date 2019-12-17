@@ -7,7 +7,6 @@ import 'package:virtualworkng/enum/constants.dart';
 import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/model/UserModel.dart';
 import 'package:virtualworkng/router.dart';
-import 'package:virtualworkng/screens/MenuScreen.dart';
 import 'package:virtualworkng/style/AppText.dart';
 
 void main() async{
@@ -24,16 +23,15 @@ void main() async{
 
 
   if(admin != null){
-    runApp(MyApp(route: TestingRoute,));
-    //runApp(MyApp(route: adminDashboardRoute,));
+    runApp(MyApp(route: adminDashboardRoute,));
 
   }else if(staff != null){
-    runApp(MyApp(route: TestingRoute,));
+    runApp(MyApp(route: staffDashboardRoute,));
 
   }else{
-    runApp(MyApp(route: TestingRoute,));
+    runApp(MyApp(route: loginRoute,));
+    //runApp(MyApp(route: TestingRoute,));
   }
-
 }
 
 class MyApp extends StatelessWidget {

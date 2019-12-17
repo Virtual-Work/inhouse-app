@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
-class DisputeScreen extends StatefulWidget {
+class StaffDisputeScreen extends StatefulWidget {
+  AnimationController animationController;
+
+  StaffDisputeScreen(this.animationController);
   @override
-  _DisputeScreenState createState() => _DisputeScreenState();
+  _StaffDisputeScreenState createState() => _StaffDisputeScreenState();
 }
 
-class _DisputeScreenState extends State<DisputeScreen> {
+class _StaffDisputeScreenState extends State<StaffDisputeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dispute'),
+      ),
+    );
   }
 }

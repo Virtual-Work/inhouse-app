@@ -53,6 +53,8 @@ dependencies:
   flutter_swiper: ^1.1.6
   flutter_speed_dial: ^1.2.5
   easy_dialogs: ^1.0.0
+  firebase_storage: ^3.0.11
+
 #  firebase_crashlytics: ^0.1.1+2
    
 #  firebase_core: ^0.4.2

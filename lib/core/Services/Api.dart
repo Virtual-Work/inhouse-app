@@ -1,5 +1,12 @@
 
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtualworkng/enum/constants.dart';
 import 'package:virtualworkng/model/ListofProjects.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/AdminDasbhoardScreen.dart';
 class Api {
@@ -8,13 +15,17 @@ class Api {
   // final String path;
   CollectionReference collectionReference;
 
-  Future<QuerySnapshot> Authentication(){
-   try{
-     return databaseReference.collection('Authentication').getDocuments();
-   }catch(e){
-     print('******signInAnonymous ERROR ${e.toString()}');
-     return null;
-   }
+
+  Future<QuerySnapshot> authentication({String email, password}){
+    try{
+      return databaseReference.collection('Authentication').where('Email',
+          isEqualTo: email).getDocuments();
+      // return databaseReference.collection('Authentication').getDocuments();
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
   }
 
   Future<QuerySnapshot> getA(){
@@ -34,8 +45,9 @@ class Api {
   //After successful Login by Staff, Staff can now create his/her own password
   Future createPIN({String staffEmail, password}) async{
     try{
-      return databaseReference.collection("Staffs").document(staffEmail).updateData({
-        'Password': password
+      return databaseReference.collection('Authentication').document(staffEmail).updateData({
+        'Password': password,
+        'isAdmin': false, //Am not an Admin, so I can't access admin UI
       });
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
@@ -45,11 +57,62 @@ class Api {
 
   Future<QuerySnapshot> staffSignIn({String email}){
     try{
-      return databaseReference.collection('Staffs').where('Email', isEqualTo: email).getDocuments();//.then((v){
-//        print("FFHFHFHF");
-//        v.documents.forEach((f) => f.documentID
-//        ); //print('${}'));
-      // });
+      return databaseReference.collection('Staffs').where('Email',
+          isEqualTo: email).getDocuments();
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future addMoreDetailsToStaff({String staffEmail, fName, lName, phone, accountN, accountNo,
+    bankName, withdrawalPlan, var file})async{
+
+    try{
+      final StorageReference storageRef = FirebaseStorage.instance.ref().child('Staff Pictures');
+      var time = new DateTime.now();
+      final StorageUploadTask uploadTask = storageRef.child(time.toString() + '.jpg').putFile(file);
+      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      //print(imageUrl.toString());
+
+      return databaseReference.collection("Staffs").document(staffEmail).updateData({
+        'Email': staffEmail,
+        'Firstname' : fName,
+        'Lastname' : lName,
+        'PhoneNumber' : phone,
+        'AccountName' : accountN,
+        'AccountNumber' : accountNo,
+        'BankName' : bankName,
+        'WithdrawalPlan' : withdrawalPlan,
+        'Picture' : imageUrl.toString(),
+      });
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future updateMoreDetailsToStaff({String staffEmail, fName, lName, phone, accountN, accountNo,
+    bankName, withdrawalPlan, })async{ //var file
+        //Am removing updating image for now..
+    try{
+//      final StorageReference storageRef = FirebaseStorage.instance.ref().child('Staff Pictures');
+//      var time = new DateTime.now();
+//      final StorageUploadTask uploadTask = storageRef.child(time.toString() + '.jpg').putFile(file);
+//      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      //print(imageUrl.toString());
+
+      return databaseReference.collection("Staffs").document(staffEmail).updateData({
+        'Email': staffEmail,
+        'Firstname' : fName,
+        'Lastname' : lName,
+        'PhoneNumber' : phone,
+        'AccountName' : accountN,
+        'AccountNumber' : accountNo,
+        'BankName' : bankName,
+        'WithdrawalPlan' : withdrawalPlan,
+       // 'Picture' : imageUrl.toString(),
+      });
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
@@ -86,10 +149,6 @@ class Api {
   }
 
   Future addStaff({String staffEmail, priviledge}) async{
-//    List<String> addprojects() {
-//      // Somehow implement it so it returns a List<String> based on your fields
-//      return ['project1','project2','project3'];
-//    }
     try{
       return databaseReference.collection("Staffs").document(staffEmail).setData({
         'Email': staffEmail,
@@ -140,6 +199,16 @@ class Api {
     }
   }
 
+  Stream<DocumentSnapshot> myDetails(String mail){
+    try{
+      return  databaseReference.collection('Staffs').document(mail).snapshots(); //getDocuments().asStream()
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
   Future<DocumentReference>  delete_And_Archive_StaffData({String email}) async{
     try{
       await databaseReference.collection("Archive").document(email).setData({
@@ -154,9 +223,18 @@ class Api {
     }
   }
 
+
+  uploadPicture(var file)async{
+    final StorageReference storageRef = FirebaseStorage.instance.ref().child('Staff Pictures');
+    var time = new DateTime.now();
+    final StorageUploadTask uploadTask = storageRef.child(time.toString() + '.jpg').putFile(file);
+    var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    print(imageUrl.toString());
+  }
+
   //***********************************************************************************
 // **********************PROJECT API**************************************************
-// ***********************************************************************************
+// ***********************************************imag************************************
 
   //Return Stream of getting Projects.....
   Stream<QuerySnapshot> getProjects(){
@@ -262,48 +340,34 @@ class Api {
   //***********************************************************************************
 // **********************TESTING API**************************************************
 // ***********************************************************************************
+//Storing data to subcollection.. This is working perfectly..
+//  return  databaseReference.collection('Staffs').document("horlaz229@virtualwork.ng").
+//  collection('Wallet').add({
+//  'Balance': '23,000',
+//  });
 
-
-  //Future<QuerySnapshot> getTestProjectsFuture(){
-  Future<QuerySnapshot>  getTestProjectsFuture()async{
+                //FETCHING DATA OF SUBCOLLECTION...
+//  var query  = await databaseReference.collection('Staffs').document("horlaz229@virtualwork.ng").
+//  collection('Wallet').getDocuments();
+//
+//  for(var d in query.documents){
+//  print(d.data);
+//  }
+   testPassword() async{
+    List<Tester> tester = Tester.testerList;
     try{
-      return  databaseReference.collection("Project").getDocuments();
-      //getDocuments().asStream()
+        return  databaseReference.collection('Staffs').
+        document("horlaz229@virtualwork.ng").collection('Wallet').document('horlaz229@virtualwork.ng').updateData({
+          'Balance': '13,000',
+          'Amounts' : ['10000'],
+           'Time' : ['9:00bn'],
+           'Day' : ['Monday'],
+  });
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
     }
   }
-
-  Future addProjectDemo({String projectName, projectTitle, supervisor, createdDate}) async{
-    try{
-     var query1 = databaseReference.collection('Me').document(projectTitle);
-     var query2 =   query1.collection(supervisor).add({
-       'Title': projectTitle,
-       'status': '0',
-       'supervisor': supervisor,
-       'DateCreated': createdDate,
-     });
-
-
-
-//     var set = query2.setData({
-//       'Title': projectTitle,
-//       'status': '0',
-//       'supervisor': supervisor,
-//       'DateCreated': createdDate,
-//     });
-
-     return query2;
-
-    }catch(e){
-      print('******signInAnonymous ERROR ${e.toString()}');
-      return null;
-    }
-  }
-
-
-
 //  Future<void> removeDocument(String id){
 //    return documentReference.document(id).delete();
 //  }
@@ -314,5 +378,29 @@ class Api {
 //    return documentReference.document(id).updateData(data) ;
 //  }
 
+}
+
+class Tester{
+  String amount, time, day;
+
+  Tester({this.amount, this.time, this.day});
+
+  static List<Tester> testerList = [
+    Tester(
+      amount: '100',
+      day: '12 days ago',
+      time: '12:00pm'
+    ),
+    Tester(
+        amount: '200',
+        day: '14 days ago',
+        time: '11:00pm'
+    ),
+    Tester(
+        amount: '100',
+        day: '15 days ago',
+        time: '1:00pm'
+    ),
+  ];
 }
 

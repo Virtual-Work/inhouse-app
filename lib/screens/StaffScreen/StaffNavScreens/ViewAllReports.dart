@@ -1,18 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:virtualworkng/core/Services/Api.dart';
+import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/TitleView.dart';
 import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/style/AppColor.dart';
+import 'package:virtualworkng/util/customFunctions.dart';
 import 'package:virtualworkng/widgets/ReportCardWidgets.dart';
 import 'package:virtualworkng/widgets/StaffWalletView.dart';
 import 'package:virtualworkng/widgets/TransactionCard.dart';
-class ReportScreen extends StatefulWidget {
+
+var customF = locator<CustomFunction>();
+var api = locator<Api>();
+
+class ViewAllReportScreen extends StatefulWidget {
+  AnimationController animationController;
+
+  ViewAllReportScreen(this.animationController);
+
   @override
-  _ReportScreenState createState() => _ReportScreenState();
+  _ViewAllReportScreenState createState() => _ViewAllReportScreenState();
 }
 
-class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMixin{
-  AnimationController animationController;
+class _ViewAllReportScreenState extends State<ViewAllReportScreen> with TickerProviderStateMixin{
+
   Animation<double> topBarAnimation;
 
   // var customFunction = locator<CustomFunction>();
@@ -23,9 +36,9 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
 
   @override
   void initState() {
-    animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+    widget.animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
     topBarAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-        parent: animationController,
+        parent: widget.animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
     addAllListData();
 
@@ -57,14 +70,20 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
   void addAllListData() {
     var count = 5;
     listViews.add(
-        SizedBox(height: 10,)
+      TitleView(
+        titleTxt: 'Tap on the Report to view details',
+        animation: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController,
+            curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController,
+      ),
     );
     listViews.add(
       ReportCardWidget(
         animation: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController,
+            parent: widget.animationController,
             curve: Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController,
+        animationController: widget.animationController,
       ),
     );
     listViews.add(
@@ -81,25 +100,17 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
        backgroundColor: AppColor.lightText,
-      body: Stack(
-        children: <Widget>[
-          getMainListViewUI(),
-          getAppBarUI(),
-          SizedBox(
-            height: MediaQuery.of(context).padding.bottom,
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColor.thirdColor,
-        child: Icon(
-          Icons.add,
-          size: 30.0,
-          color: Colors.white,
+      body: StreamProvider<QuerySnapshot>.value(
+        value: api.getProjects(),
+        child: Stack(
+          children: <Widget>[
+            getMainListViewUI(),
+            getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
         ),
-        onPressed: (){
-          _addReport(context);
-        },
       ),
     );
   }
@@ -120,7 +131,7 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
             itemCount: listViews.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
-              animationController.forward();
+              widget.animationController.forward();
               return listViews[index];
             },
           );
@@ -133,7 +144,7 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: animationController,
+          animation: widget.animationController,
           builder: (BuildContext context, Widget child) {
             return FadeTransition(
               opacity: topBarAnimation,
@@ -175,7 +186,7 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
                                   style: TextStyle(
                                     fontFamily: AppColor.fontName,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 20 + 6 - 6 * topBarOpacity,
+                                    fontSize: 14 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
                                     color: AppColor.nearlyBlack,
                                   ),
@@ -240,14 +251,5 @@ class _ReportScreenState extends State<ReportScreen> with TickerProviderStateMix
   }
 
 
-  _addReport(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (sheetContext) => BottomSheet(
-        builder: (_) => SubmitReportUI(),
-        onClosing: (){},
-      ),
-    );
-  }
 
 }
