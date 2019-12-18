@@ -26,10 +26,18 @@ class CustomFunction{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(AdminMail, mail);
   }
-  //Save User Info in sharePref
+
+  //Save Staff Email only in sharePref
   saveStaffInfo({String mail})async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(StaffEmail, mail);
+  }
+  //Saving other details like, privilege, FirstName, LastName
+  saveStaffdetails({String privilege, firstName, lastName})async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(pref_privilege, privilege);
+    prefs.setString(pref_firstName, firstName);
+    prefs.setString(pref_lastName, lastName);
   }
 
   loadingWidget(){
@@ -206,6 +214,30 @@ class CustomFunction{
         size: 22.0,
         color: Colors.green,
       );
+    }
+  }
+
+  //For Report
+  //0 = Pending
+  //1 = Approve
+  //2 = Decline
+  String reportStatus(int status) {
+    switch (status) {
+      case 0:
+        return 'Pending';
+        break;
+
+      case 1:
+        return  'Approve';
+
+        break;
+
+      case 2:
+        return  'Decline';
+        break;
+
+      default:
+        return '';
     }
   }
 }

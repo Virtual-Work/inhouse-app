@@ -98,15 +98,25 @@ class _ListOfProjectScreenState extends State<ListOfProjectScreen> with TickerPr
       backgroundColor: AppColor.lightText,
       body: StreamProvider<QuerySnapshot>.value(
         value: api.getProjects(),
-        child: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+        child: Builder(
+            builder: (context){
+              var snapshot = Provider.of<QuerySnapshot>(context);
+              if(snapshot == null){
+                return customF.loadingWidget();
+              }else{
+                return Stack(
+                  children: <Widget>[
+                    getMainListViewUI(),
+                    getAppBarUI(),
+                    SizedBox(
+                      height: MediaQuery.of(context).padding.bottom,
+                    )
+                  ],
+                );
+              }
+            }
         ),
+
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.thirdColor,

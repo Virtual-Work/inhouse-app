@@ -422,7 +422,6 @@ class _StaffProfileScreenState extends State<StaffProfileScreen> with TickerProv
     setState(() {
       mail = prefs.getString(StaffEmail);
     });
-
   }
 
   loadPlan(){

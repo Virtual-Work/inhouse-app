@@ -5,7 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualworkng/core/Services/Api.dart';
+import 'package:virtualworkng/enum/constants.dart';
 import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/TitleView.dart';
 import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
@@ -29,15 +31,16 @@ class StaffReportScreen extends StatefulWidget {
 class _StaffReportScreenState extends State<StaffReportScreen> with TickerProviderStateMixin{
 
   Animation<double> topBarAnimation;
-
   // var customFunction = locator<CustomFunction>();
   List<Widget> listViews = List<Widget>();
   var scrollController = ScrollController();
   double topBarOpacity = 0.0;
   bool isSelected = false;
+  String mail;
 
   @override
   void initState() {
+    getEmail();
     widget.animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
     topBarAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: widget.animationController,
@@ -74,7 +77,7 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
     //TextView UI with Animation
     listViews.add(
       TitleView(
-        titleTxt: 'Tap on the Project to Submit Report',
+        titleTxt: 'Tap on the Project to Submit Report or assign project',
         animation: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve: Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
@@ -106,16 +109,25 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
        backgroundColor: AppColor.lightText,
-      body: StreamProvider<QuerySnapshot>.value(
-        value: api.getProjects(),
-        child: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+      body: StreamProvider<DocumentSnapshot>.value(
+        value: api.myDetails(mail),
+        child: Builder(
+          builder: (context){
+            var snapshot = Provider.of<DocumentSnapshot>(context);
+            if(snapshot == null){
+              return customF.loadingWidget();
+            }else{
+              return Stack(
+                children: <Widget>[
+                  getMainListViewUI(),
+                  getAppBarUI(),
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.bottom,
+                  )
+                ],
+              );
+            }
+          }
         ),
       ),
     );
@@ -256,6 +268,11 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
     );
   }
 
+  getEmail()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      mail = prefs.getString(StaffEmail);
+    });
 
-
+  }
 }

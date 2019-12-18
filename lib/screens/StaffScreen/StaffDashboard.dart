@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gradient_text/gradient_text.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualworkng/core/Services/Api.dart';
+import 'package:virtualworkng/enum/constants.dart';
 import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/model/StafftransactionsModel.dart';
 import 'package:virtualworkng/style/AppColor.dart';
@@ -46,20 +48,37 @@ class StaffDashboard extends StatefulWidget {
 class _StaffDashboardState extends State<StaffDashboard> with TickerProviderStateMixin{
   final formatAmounts = new NumberFormat("#,##0.00", "en_US");
   String myStatus = '';
+  String mail;
   @override
   void initState() {
-    widget.animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
     super.initState();
+    getEmail();
+    widget.animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  dashboard(),
+      body:  StreamBuilder(
+          stream: api.myDetails(mail),
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError)
+              customF.errorWidget(snapshot.error.toString());
+            return snapshot.hasData
+                ? dashboard(snapshot.data):
+            customF.loadingWidget();
+          }),
     );
   }
 
-  dashboard(){
+  dashboard(DocumentSnapshot snapshot){
+    //Save details
+    customF.saveStaffdetails(
+      privilege: snapshot.data['privilege'],
+      firstName:  snapshot.data['Firstname'],
+      lastName:  snapshot.data['Lastname'],
+    );
     final _media = MediaQuery.of(context).size;
     return ListView(
       physics: BouncingScrollPhysics(),
@@ -363,5 +382,12 @@ class _StaffDashboardState extends State<StaffDashboard> with TickerProviderStat
     );
   }
 
+
+  getEmail()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      mail = prefs.getString(StaffEmail);
+    });
+  }
 }
 

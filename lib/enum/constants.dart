@@ -13,5 +13,9 @@ const String staffDashboardRoute = '/Staffdash';
 const String TestingRoute = '/testing';
 const String AdminMail = 'AdminEmail';
 const String StaffEmail = 'StaffEmail';
+const String pref_privilege = 'privilege';
+const String pref_firstName = 'FirstName';
+const String pref_lastName = 'LastName';
+
 
 

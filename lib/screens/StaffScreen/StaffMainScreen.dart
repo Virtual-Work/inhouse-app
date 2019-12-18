@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualworkng/TesterUI.dart';
+import 'package:virtualworkng/core/Services/Api.dart';
+import 'package:virtualworkng/enum/constants.dart';
+import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/model/ListofProjects.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/AdminDasbhoardScreen.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/AdminWithdrawalScreen.dart';
@@ -16,15 +21,13 @@ import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffDisputeSc
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffProfilleScreen.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffReportScreen.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffWalletUI.dart';
-import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/TitleView.dart';
-import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/style/AppColor.dart';
-import 'package:virtualworkng/widgets/ReportCardWidgets.dart';
-import 'package:virtualworkng/widgets/StaffTabs.dart';
-import 'package:virtualworkng/widgets/StaffWalletView.dart';
-import 'package:virtualworkng/widgets/TransactionCard.dart';
+import 'package:virtualworkng/util/customFunctions.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:virtualworkng/widgets/noInternet.dart';
+
+var customF = locator<CustomFunction>();
+var api = locator<Api>();
 class StaffMainScreen extends StatefulWidget {
   @override
   _StaffMainScreenState createState() => _StaffMainScreenState();
@@ -33,8 +36,6 @@ class StaffMainScreen extends StatefulWidget {
 class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderStateMixin{
   AnimationController animationController;
   Animation<double> topBarAnimation;
-
-  // var customFunction = locator<CustomFunction>();
   List<Widget> listViews = List<Widget>();
   var scrollController = ScrollController();
   double topBarOpacity = 0.0;
@@ -43,8 +44,8 @@ class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderSt
 
   @override
   void initState() {
-    animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
     super.initState();
+    animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
   }
 
 
@@ -63,7 +64,8 @@ class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderSt
                 children: [
                   Container(
                       color: connected ? Colors.white : Color(0xFFEE4400),
-                      child: (connected ? switchBody() : NoInternetWidgets())
+                      child: (connected ? switchBody()
+                          : NoInternetWidgets())
                   ),
                 ],
               );
@@ -132,4 +134,5 @@ class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderSt
       return StaffProfileScreen(); //Account
     }
   }
+
 }

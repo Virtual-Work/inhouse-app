@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtualworkng/core/Services/Api.dart';
+import 'package:virtualworkng/enum/constants.dart';
+import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/screens/AdminScreen/AdminNavScreens/SearchScreen.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/StaffReportScreen.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/ViewAllReports.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/style/AppTextStyle.dart';
+import 'package:virtualworkng/util/customFunctions.dart';
+
 
 class ReportTabs extends StatefulWidget {
   AnimationController animationController;
@@ -15,6 +22,7 @@ class ReportTabs extends StatefulWidget {
 }
 
 class _ReportTabsState extends State<ReportTabs> {
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -53,4 +61,5 @@ class _ReportTabsState extends State<ReportTabs> {
       ),
     );
   }
+
 }

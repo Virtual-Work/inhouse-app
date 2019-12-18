@@ -1,23 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualworkng/core/Services/Api.dart';
+import 'package:virtualworkng/enum/constants.dart';
 import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/TitleView.dart';
-import 'package:virtualworkng/screens/StaffScreen/SubmitReportUI.dart';
 import 'package:virtualworkng/style/AppColor.dart';
 import 'package:virtualworkng/util/customFunctions.dart';
-import 'package:virtualworkng/widgets/ReportCardWidgets.dart';
-import 'package:virtualworkng/widgets/StaffWalletView.dart';
-import 'package:virtualworkng/widgets/TransactionCard.dart';
+import 'package:virtualworkng/widgets/ViewReportWidgets.dart';
 
 var customF = locator<CustomFunction>();
 var api = locator<Api>();
 
 class ViewAllReportScreen extends StatefulWidget {
   AnimationController animationController;
-
   ViewAllReportScreen(this.animationController);
 
   @override
@@ -25,7 +22,6 @@ class ViewAllReportScreen extends StatefulWidget {
 }
 
 class _ViewAllReportScreenState extends State<ViewAllReportScreen> with TickerProviderStateMixin{
-
   Animation<double> topBarAnimation;
 
   // var customFunction = locator<CustomFunction>();
@@ -33,9 +29,11 @@ class _ViewAllReportScreenState extends State<ViewAllReportScreen> with TickerPr
   var scrollController = ScrollController();
   double topBarOpacity = 0.0;
   bool isSelected = false;
+  String mail;
 
   @override
   void initState() {
+    getEmail(); //Get Saved Image
     widget.animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
     topBarAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: widget.animationController,
@@ -79,13 +77,14 @@ class _ViewAllReportScreenState extends State<ViewAllReportScreen> with TickerPr
       ),
     );
     listViews.add(
-      ReportCardWidget(
+      ViewReportWidgets(
         animation: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve: Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
       ),
     );
+
     listViews.add(
         SizedBox(height: 100,)
     );
@@ -100,17 +99,28 @@ class _ViewAllReportScreenState extends State<ViewAllReportScreen> with TickerPr
   Widget build(BuildContext context) {
     return Scaffold(
        backgroundColor: AppColor.lightText,
-      body: StreamProvider<QuerySnapshot>.value(
-        value: api.getProjects(),
-        child: Stack(
-          children: <Widget>[
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+      body: StreamProvider<DocumentSnapshot>.value(
+        value: api.getReports(staffEmail: mail),
+       child: Builder(
+            builder: (context){
+              var snapshot = Provider.of<DocumentSnapshot>(context);
+              if(snapshot == null){
+                return customF.loadingWidget();
+              }else{
+                print(snapshot.data.length);
+                return  Stack(
+                  children: <Widget>[
+                    getMainListViewUI(),
+                    getAppBarUI(),
+                    SizedBox(
+                      height: MediaQuery.of(context).padding.bottom,
+                    )
+                  ],
+                );
+              }
+            }
         ),
+
       ),
     );
   }
@@ -250,6 +260,10 @@ class _ViewAllReportScreenState extends State<ViewAllReportScreen> with TickerPr
     );
   }
 
-
-
+  getEmail()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+     setState(() {
+       mail = prefs.getString(StaffEmail);
+     });
+  }
 }

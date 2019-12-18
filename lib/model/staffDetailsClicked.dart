@@ -10,5 +10,4 @@ set setIndexClicked(int index){
  notifyListeners();
 }
 
-
 }

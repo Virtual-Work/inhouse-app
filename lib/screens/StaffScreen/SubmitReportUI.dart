@@ -275,6 +275,7 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
 
     }
   }
+
   format(var now){
     var formatter = new DateFormat('EEEE, MMMM dd, yyyy.');
     String formatted = formatter.format(now);

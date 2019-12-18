@@ -128,6 +128,7 @@ class Api {
       return null;
     }
   }
+
 //List of archive Staff, List of archive.
   Stream<QuerySnapshot> getListOfArchieve() {
     try{
@@ -174,6 +175,16 @@ class Api {
     }
   }
 
+  //Get Stream of Submitted Reports.
+  Stream<DocumentSnapshot> getReports({String staffEmail}){
+    try{
+      return databaseReference.collection("Report").document(staffEmail).snapshots();
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
   Future addProjectToSupervisor({String projectName, String staffEmail}){
     try{
       return databaseReference.collection("Staffs").document(staffEmail).updateData({
@@ -199,6 +210,7 @@ class Api {
     }
   }
 
+    //Get Staff details.................
   Stream<DocumentSnapshot> myDetails(String mail){
     try{
       return  databaseReference.collection('Staffs').document(mail).snapshots(); //getDocuments().asStream()
@@ -208,6 +220,7 @@ class Api {
       return null;
     }
   }
+
 
   Future<DocumentReference>  delete_And_Archive_StaffData({String email}) async{
     try{
@@ -231,6 +244,18 @@ class Api {
     var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     print(imageUrl.toString());
   }
+
+  //Show List of Project Am Assign To.
+  Future<DocumentSnapshot>  getStaffDetails({String email}) async{
+    try{
+      return databaseReference.collection("Staffs").document(email).get();
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
 
   //***********************************************************************************
 // **********************PROJECT API**************************************************
