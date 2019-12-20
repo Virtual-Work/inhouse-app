@@ -119,10 +119,10 @@ class _StaffMainScreenState extends State<StaffMainScreen> with TickerProviderSt
 //    HOME, E-Wallet,  Disputes,  Report, Account,
     if(_selectedIndex == 0){
       return StaffDashboard(animationController); //    HOME,
-     // return TesterUI(); //    HOME,
 
     }else if(_selectedIndex == 1){
-      return StaffWallet(animationController); //E-Wallet
+     return StaffWallet(animationController); //E-Wallet
+    //  return TesterUI();
 
     }else if(_selectedIndex == 2){ //Report
       return ReportTabs(animationController);

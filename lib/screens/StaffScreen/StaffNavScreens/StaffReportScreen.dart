@@ -273,6 +273,5 @@ class _StaffReportScreenState extends State<StaffReportScreen> with TickerProvid
     setState(() {
       mail = prefs.getString(StaffEmail);
     });
-
   }
 }

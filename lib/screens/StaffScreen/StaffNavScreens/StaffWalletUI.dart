@@ -1,9 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtualworkng/enum/constants.dart';
+import 'package:virtualworkng/locator.dart';
 import 'package:virtualworkng/screens/StaffScreen/StaffNavScreens/TitleView.dart';
 import 'package:virtualworkng/style/AppColor.dart';
+import 'package:virtualworkng/util/customFunctions.dart';
 import 'package:virtualworkng/widgets/StaffWalletView.dart';
 import 'package:virtualworkng/widgets/TransactionCard.dart';
+import '../../LoginScreen.dart';
+
+var customF = locator<CustomFunction>();
+
 class StaffWallet extends StatefulWidget {
   AnimationController animationController;
   StaffWallet(this.animationController);
@@ -18,15 +28,16 @@ class _StaffWalletState extends State<StaffWallet> with TickerProviderStateMixin
   var scrollController = ScrollController();
   double topBarOpacity = 0.0;
   bool isSelected = false;
+  String mail;
 
   @override
   void initState() {
-    widget.animationController =
-        AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+    widget.animationController = AnimationController(duration: Duration(milliseconds: 600), vsync: this);
     topBarAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: widget.animationController,
         curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
     addAllListData();
+    getEmail();
 
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
@@ -75,8 +86,6 @@ class _StaffWalletState extends State<StaffWallet> with TickerProviderStateMixin
         animationController: widget.animationController,
       ),
     );
-
-
     listViews.add(
       tranTitle(),
     );
@@ -93,7 +102,6 @@ class _StaffWalletState extends State<StaffWallet> with TickerProviderStateMixin
         SizedBox(height: 100,)
     );
   }
-
   Future<bool> getData() async {
     await Future.delayed(const Duration(milliseconds: 50));
     return true;
@@ -102,18 +110,29 @@ class _StaffWalletState extends State<StaffWallet> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: AppColor.thirdColor,
-      body: Stack(
-        children: <Widget>[
-          getMainListViewUI(),
-          getAppBarUI(),
-          SizedBox(
-            height: MediaQuery
-                .of(context)
-                .padding
-                .bottom,
-          )
-        ],
+      body: StreamProvider<QuerySnapshot>.value(
+        value: api.getTransactions(email: 'horlaz229@virtualwork.ng'),
+        child: Builder(
+            builder: (context){
+              var snapshot = Provider.of<QuerySnapshot>(context);
+              if(snapshot == null){
+                return customF.loadingWidget();
+              }else{
+                return Stack(
+                  children: <Widget>[
+                    getMainListViewUI(),
+                    getAppBarUI(),
+                    SizedBox(
+                      height: MediaQuery
+                          .of(context)
+                          .padding
+                          .bottom,
+                    )
+                  ],
+                );
+              }
+            }
+        ),
       ),
     );
   }
@@ -261,7 +280,6 @@ class _StaffWalletState extends State<StaffWallet> with TickerProviderStateMixin
     );
   }
 
-
   Widget tranTitle() {
     return Padding(
       padding: const EdgeInsets.only(
@@ -290,5 +308,12 @@ class _StaffWalletState extends State<StaffWallet> with TickerProviderStateMixin
         ],
       ),
     );
+  }
+
+  getEmail()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      mail = prefs.getString(StaffEmail);
+    });
   }
 }

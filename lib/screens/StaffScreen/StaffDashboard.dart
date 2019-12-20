@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gradient_text/gradient_text.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualworkng/core/Services/Api.dart';
 import 'package:virtualworkng/enum/constants.dart';
@@ -13,6 +14,7 @@ import 'package:virtualworkng/style/AppTextStyle.dart';
 import 'package:virtualworkng/util/customFunctions.dart';
 import 'package:virtualworkng/util/screen_size.dart';
 import 'package:virtualworkng/widgets/ListOfProjectWidgets.dart';
+import 'package:virtualworkng/widgets/TransactionCard.dart';
 import 'package:virtualworkng/widgets/donut_charts.dart';
 import 'package:virtualworkng/widgets/logOut.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -209,14 +211,18 @@ class _StaffDashboardState extends State<StaffDashboard> with TickerProviderStat
               // ignore: missing_return
               overscroll.disallowGlow();
             },
-            child: FutureBuilder<QuerySnapshot>(
-              future: api.getProjectsFuture(),
-              builder: (BuildContext context, snapshot){
-                if (snapshot.hasError)
-                  customF.errorWidget(snapshot.error.toString());
-                return snapshot.hasData ?
-                transactionUI(snapshot.data) : customF.loadingWidget();
-              },
+            child:  StreamProvider<QuerySnapshot>.value(
+              value: api.getTransactions(email: 'horlaz229@virtualwork.ng'),
+              child: Builder(
+                  builder: (context){
+                    var snapshot = Provider.of<QuerySnapshot>(context);
+                    if(snapshot == null){
+                      return customF.loadingWidget();
+                    }else{
+                      return transactionUI(snapshot);
+                    }
+                  }
+              ),
             ),
           ),
         ),
@@ -298,82 +304,77 @@ class _StaffDashboardState extends State<StaffDashboard> with TickerProviderStat
   //Getting the latest Transaction from the Server, this
   //is the UI for displaying the data
   transactionUI(QuerySnapshot snapshot){
-
     return ListView.separated(
       physics: BouncingScrollPhysics(),
       padding: EdgeInsets.only(bottom: 10),
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: (getTransact().length > 10 ? 5 : getTransact().length),
+      itemCount: (snapshot.documents.length >= 10 ? 10 : snapshot.documents.length), //Show 10 items
       itemBuilder: (context, index) {
         return Container(
-          child:  (getTransact().length < 10 ? GestureDetector(
-            child: Container(
-                child: ListTile(
-                  dense: true,
-                  trailing: Column(
-                    children: <Widget>[
-                      customF.checkIcon(getTransact()[index].network),
-                      Text(customF.checkString(getTransact()[index].network))
-                    ],
-                  ),
-                  leading: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: Material(
-                      elevation: 10,
-                      shape: CircleBorder(),
-                      shadowColor: Color(0xFF63013C), //ChangeColor(transaction[index].network).withOpacity(0.4),
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: customF.ChangeColor(getTransact()[index].network),
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Icon(
-                            Icons.account_balance_wallet,
-                            color: Colors.white,
-                          ),
-                        ),
+            child: ListTile(
+              dense: true,
+              trailing: Column(
+                children: <Widget>[
+                  customF.transactionIcon(snapshot.documents[index].data['status']),
+                  Text(customF.transactionStatus(snapshot.documents[index].data['status']))
+                ],
+              ),
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Material(
+                  elevation: 10,
+                  shape: CircleBorder(),
+                  shadowColor: Color(0xFF63013C), //ChangeColor(transaction[index].network).withOpacity(0.4),
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: customF.transactionIconColor(snapshot.documents[index].data['status']),
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.white,
                       ),
                     ),
                   ),
-                  title: Row(
-                    children: <Widget>[
-                      Text(
-                        'N' + formatAmounts.format(double.parse(getTransact()[index].amount)),
+                ),
+              ),
+              title: Row(
+                children: <Widget>[
+                  Text(
+                    'N' + formatAmounts.format(double.parse(snapshot.documents[index].data['Amount'])
+                    ),
+                    style: TextStyle(
+                        inherit: true,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16.0),
+
+                  ),
+                  SizedBox(width: 50.0,),
+
+                ],
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(snapshot.documents[index].data['Bank'],
                         style: TextStyle(
                             inherit: true,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16.0),
-
-                      ),
-                      SizedBox(width: 50.0,),
-
-                    ],
-                  ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(getTransact()[index].phoneno,
-                            style: TextStyle(
-                                inherit: true,
-                                fontSize: 12.0,
-                                color: Colors.black45)),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
+                            fontSize: 12.0,
+                            color: Colors.black45)),
+                    SizedBox(
+                      width: 10,
                     ),
-                  ),
-                )
-            ),
-          )
-              : customF.getInformationMessage('No Latest Transaction')),
+                  ],
+                ),
+              ),
+            )
         );
       },
       separatorBuilder: (context, index) {
@@ -381,7 +382,6 @@ class _StaffDashboardState extends State<StaffDashboard> with TickerProviderStat
       },
     );
   }
-
 
   getEmail()async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -79,61 +79,47 @@ class CustomFunction{
       style: TextStyle( fontWeight: FontWeight.w900, color: Colors.grey[100]),));
   }
 
-  Color ChangeColor(String network) {
+  //0 - Pending
+  //1 - Successful
+  //2 - Delivered
+  // 3 - Failed
+  Color transactionIconColor(int status) {
 
-    switch (network) {
-      case 'MTN':
+    switch (status) {
+      case 0:
+      //0 - Pending
         return Color(0xFFB6900B);
         break;
 
-      case 'GLO':
+      case 1:
+      //1 - Successful
+        return  Color(0xFF4E8A41);
+
+        break;
+
+      case 2:
+      //2 - Delivered
         return Color(0xFF006E52);
         break;
 
-      case 'AIRTEL':
-        return Color(0xFFED1B24);
-        break;
-
-      case 'GLO':
-        return Color(0xFF4E8A41);
-        break;
-
-      case 'gift':
-        return Color(0xFFFB8C0C);
-        break;
-
-      case 'GOTV':
-        return Color(0xFFff310f);
-        break;
-
-      case 'dstv':
-        return Color(0xFF0098DA);
-        break;
-
-      case 'startimes':
-        return Color(0xFFEC690F);
-        break;
-
-      case 'WAEC':
-        return Colors.yellow;
-        break;
-
-      case 'SMILE':
-        return Colors.lightGreen;
-        break;
-
-      case 'Bank':
-        return Colors.pink;
+      case 3:
+      // 3 - Failed
+        return  Color(0xFFED1B24);
         break;
 
       default:
-        return Colors.purpleAccent;
+        return  Colors.purpleAccent;
     }
   }
 
-  Icon checkIcon(String network) {
-    switch (network) {
-      case 'MTN':
+  //0 - Pending
+  //1 - Successful
+  //2 - Delivered
+  // 3 - Failed
+  Icon transactionIcon(int status) {
+    switch (status) {
+      case 0:
+      //0 - Pending
         return Icon(
           Icons.error_outline,
           size: 22.0,
@@ -141,21 +127,32 @@ class CustomFunction{
         );
         break;
 
-      case 'GLO':
+      case 1:
+      //1 - Successful
         return  Icon(
-          Icons.done_all,
+          Icons.check,
           size: 22.0,
           color: Color(0xFF006E52),
         );
 
         break;
 
-      case 'AIRTEL':
+      case 2:
+      //2 - Delivered
         return  Icon(
-          Icons.error,
+          Icons.done_all,
           size: 22.0,
-          color: Color(0xFFED1B24),
+          color: Color(0xFF006E52),
         );
+        break;
+
+        case 3:
+        // 3 - Failed
+        return  Icon(
+        Icons.error,
+        size: 22.0,
+        color: Color(0xFFED1B24),
+    );
         break;
 
       default:
@@ -167,23 +164,30 @@ class CustomFunction{
     }
   }
 
-  String checkString(String network) {
-    switch (network) {
-      case 'MTN':
+  String transactionStatus(int status) {
+    //0 - Pending
+    //1 - Successful
+    //2 - Delivered
+    // 3 - Failed
+    switch (status) {
+      case 0:
         return 'Pending';
         break;
 
-      case 'GLO':
-        return  'Delivered';
+      case 1:
+        return  'Successful';
 
         break;
 
-      case 'AIRTEL':
+      case 2:
+        return  'Delivered';
+        break;
+
+      case 3:
         return  'Failed';
         break;
 
       default:
-
         return '';
     }
   }

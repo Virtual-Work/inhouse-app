@@ -27,31 +27,34 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
   bool processing = false;
   String fromDate, toDate;
   TextEditingController projectController = TextEditingController();
-  TextEditingController taskNameController = TextEditingController();
-  TextEditingController hoursController = TextEditingController();
+
   int _quantity = 1;
   List _listofTaskUI = List();
   List<TextEditingController> controller;
   Map<String, String> inputMap = new Map(); //taskName,(key) while hours(value)
   bool isReportPeriodSelected = false;
+  var tempSearchStore = [];
 
-  var textEditingControllers = <TextEditingController>[];
+  TextEditingController taskNameController = TextEditingController();
+  Map<int, TextEditingController> map = new Map<int, TextEditingController>();
+  TextEditingController hoursController = TextEditingController();
+  final taskNameView = List<TextField>();
+  final hoursView = List<TextField>();
 
   @override
   void initState() {
     super.initState();
-    controller = new List<TextEditingController>();
     projectController.text = widget.projectSelected;
   }
 
   @override
   Widget build(BuildContext context) {
-    var textFields = <TextField>[];
-    _listofTaskUI.forEach((str) {
-      var textEditingController = new TextEditingController(text: str.toString());
-      textEditingControllers.add(textEditingController);
-      return textFields.add(new TextField(controller: textEditingController));
-    });
+
+//    _listofTaskUI.forEach((str) {
+//      var textEditingController = new TextEditingController(text: str.toString());
+//      textEditingControllers.add(textEditingController);
+//      return textFields.add(new TextField(controller: textEditingController));
+//    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.thirdColor,
@@ -75,7 +78,6 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                     hintStyle: TextStyle(
                         fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                   ),
-
                 ),
               ),
               Padding(
@@ -133,8 +135,10 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                                  onPressed: () {
                                    setState(() {
                                      _quantity += 1;
-                                     controller.add(new TextEditingController());
+//                                   taskNameView.add(new TextField(controller: taskNameController));
+//                                   hoursView.add(new TextField(controller: hoursController));
                                      _listofTaskUI.add(_quantity);
+                                     tempSearchStore.add(new TextEditingController());
                                    });
                                  },
                                  child: Icon(Icons.add, color: Colors.white,),
@@ -153,8 +157,9 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                                    setState(() {
                                      if(_quantity == 1) return;
                                      _quantity -= 1;
-                                     controller.removeAt(_quantity);
                                      _listofTaskUI.removeAt(_quantity);
+//                                     taskNameView.removeAt(_quantity);
+//                                     hoursView.removeAt(_quantity);
                                    });
                                  },
                                  child: Icon(Icons.remove, color: Colors.white,),
@@ -171,7 +176,7 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                    ),
                    Column(
                      children: List.generate(_listofTaskUI.length,(index){
-                       return taskUI(_listofTaskUI[index]);
+                      return taskUI(_listofTaskUI[index]);
                      }),
                    ),
                    Padding(
@@ -200,7 +205,6 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                      color: AppColor.primaryColorDark,
                      textColor: Colors.white,
                      onPressed: (){
-                       showData();
                      },
                    ),
                    SizedBox(height: 30.0),
@@ -228,7 +232,6 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
                 child: TextField(
                   keyboardType: TextInputType.text,
-                // controller: controller,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Task Name ',
@@ -263,9 +266,11 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
   }
 
   showData(){
-    _listofTaskUI.forEach((str){
-      print(textEditingControllers[str].text);
-    });
+    var textFields = <TextField>[];
+    var textEditingController = new TextEditingController();
+    //textEditingControllers.add(textEditingController);
+     textFields.add(new TextField(controller: textEditingController));
+    return Text('');
   }
 
   submitReportApi(){
@@ -276,6 +281,7 @@ class _SubmitReportUIState extends State<SubmitReportUI> {
     }
   }
 
+  //Formatting Date
   format(var now){
     var formatter = new DateFormat('EEEE, MMMM dd, yyyy.');
     String formatted = formatter.format(now);

@@ -28,15 +28,6 @@ class Api {
     }
   }
 
-  Future<QuerySnapshot> getA(){
-    try{
-      return databaseReference.collection('AdminLogin').getDocuments();
-    }catch(e){
-      print('******signInAnonymous ERROR ${e.toString()}');
-      return null;
-    }
-  }
-
 
 //***********************************************************************************
 // **********************STAFF API**************************************************
@@ -361,6 +352,21 @@ class Api {
     }
   }
 
+  //***********************************************************************************
+// **********************Wallet API**************************************************
+// ***********************************************************************************
+  Stream<QuerySnapshot> getTransactions({String email}){
+    try{
+      return databaseReference.collection('Staffs').
+      document(email).collection('Transactions').snapshots();
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+
 
   //***********************************************************************************
 // **********************TESTING API**************************************************
@@ -379,15 +385,12 @@ class Api {
 //  print(d.data);
 //  }
    testPassword() async{
-    List<Tester> tester = Tester.testerList;
     try{
-        return  databaseReference.collection('Staffs').
-        document("horlaz229@virtualwork.ng").collection('Wallet').document('horlaz229@virtualwork.ng').updateData({
-          'Balance': '13,000',
-          'Amounts' : ['10000'],
-           'Time' : ['9:00bn'],
-           'Day' : ['Monday'],
-  });
+          return databaseReference.collection('Staffs').document('horlaz229@virtualwork.ng').snapshots().listen((v){
+            print(v.data['Wallet_balance']);
+          });
+
+
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;

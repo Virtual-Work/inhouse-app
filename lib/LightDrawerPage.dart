@@ -128,29 +128,29 @@ class LightDrawerPage extends StatelessWidget {
           style: tStyle,
         ),
         Spacer(),
-        if (showBadge)
-          Material(
-            color: Colors.deepOrange,
-            elevation: 5.0,
-            shadowColor: Colors.red,
-            borderRadius: BorderRadius.circular(5.0),
-            child: Container(
-              width: 25,
-              height: 25,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.deepOrange,
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Text(
-                "10+",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold),
-              ),
+        Material(
+          color: Colors.deepOrange,
+          elevation: 5.0,
+          shadowColor: Colors.red,
+          borderRadius: BorderRadius.circular(5.0),
+          child: Container(
+            width: 25,
+            height: 25,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.circular(5.0),
             ),
-          )
+            child: Text(
+              "10+",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        )
+
       ]),
     );
   }

@@ -21,7 +21,6 @@ void main() async{
   String staff = prefs.getString(StaffEmail);
   setupLocator();
 
-
   if(admin != null){
     runApp(MyApp(route: adminDashboardRoute,));
 
