@@ -78,8 +78,6 @@ class ListOfStaffWidgets extends StatelessWidget {
           )
         ),
         onTap: (){
-//        clicked.setIndexClicked = index;
-//        print(clicked.getindexClicked);
            showDialog(
                context: context,
                builder: (BuildContext context) {

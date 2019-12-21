@@ -610,7 +610,6 @@ class _Edit_Update_ProfileState extends State<Edit_Update_Profile> {
   }
 
   updateStaff(){
-
   api.edit_Update_Staff(fName: fnameController.text.trim(),
   lName: LnameController.text.trim(), staffEmail: widget.staffEmail,
   priviledge: _selectedPrevidleg, phoneN: phoneNoController.text.trim(),

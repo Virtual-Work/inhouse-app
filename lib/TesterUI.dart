@@ -67,19 +67,10 @@ class _TesterUIState extends State<TesterUI> {
 
   todo() {
     startLoading();
-   api.testPassword();
-//    .then((v){
-//    print(v);
-//    if (v != null) {
-//    // print(v.documentID);
-//    stopLoading();
-//    } else {
-//    stopLoading();
-//    customF.showToast(message: 'Successfully Update');
-//    Navigator.pop(context);
-//    }
-//    });
+   api.sendFunds();
+
   }
+
   startLoading() {
     setState(() {
       processing = true;
@@ -91,7 +82,5 @@ class _TesterUIState extends State<TesterUI> {
       processing = false;
     });
   }
-
-
 
 }

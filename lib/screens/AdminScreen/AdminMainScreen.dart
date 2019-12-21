@@ -123,8 +123,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> with TickerProviderSt
       return ListOfProjectScreen();
 
     }else if(_selectedIndex == 4){
-      return ReportScreen(); //Report Screen
-      //return TesterUI(); //Report Screen
+    return AdminReportsScreen(animationController);
+     //return TesterUI(); //Report Screen
     }
   }
 }

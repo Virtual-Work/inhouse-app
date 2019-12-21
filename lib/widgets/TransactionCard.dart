@@ -27,7 +27,6 @@ class _TransactionCardWidgetState extends State<TransactionCardWidget> {
   @override
   Widget build(BuildContext context) {
      final snapshot = Provider.of<QuerySnapshot>(context);
-
     return AnimatedBuilder(
       animation: widget.animationController,
       builder: (BuildContext context, Widget child) {
@@ -117,9 +116,5 @@ class _TransactionCardWidgetState extends State<TransactionCardWidget> {
         );
       },
     );
-
   }
-
-
-
 }

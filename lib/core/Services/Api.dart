@@ -102,6 +102,7 @@ class Api {
         'AccountNumber' : accountNo,
         'BankName' : bankName,
         'WithdrawalPlan' : withdrawalPlan,
+        'Wallet_balance' : 0,
        // 'Picture' : imageUrl.toString(),
       });
     }catch(e){
@@ -205,7 +206,6 @@ class Api {
   Stream<DocumentSnapshot> myDetails(String mail){
     try{
       return  databaseReference.collection('Staffs').document(mail).snapshots(); //getDocuments().asStream()
-
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
@@ -344,8 +344,6 @@ class Api {
         'Projects' : FieldValue.arrayUnion([projectTitle])
       });
 
-
-
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
       return null;
@@ -359,6 +357,47 @@ class Api {
     try{
       return databaseReference.collection('Staffs').
       document(email).collection('Transactions').snapshots();
+
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future<DocumentSnapshot>getStaffWalletBalance({String mail}){
+    try{
+      return databaseReference.collection('Staffs').document(mail).get();
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future sendFunds({String mail, time, date,  previousAmount, var newAmounts, })async{
+    try{
+      await databaseReference.collection('AdminTransactions').document('SendMoneyTo').collection(mail).add({
+        'Amounts' : newAmounts.toString(),
+        'Time' : time,
+        'Date' : date,
+        'Comment' : 'comment',
+      });
+
+      int add = previousAmount + newAmounts;
+      return  databaseReference.collection("Staffs").document(mail).updateData({
+        'Wallet_balance': add,
+      });
+    }catch(e){
+      print('******signInAnonymous ERROR ${e.toString()}');
+      return null;
+    }
+  }
+
+  //********************Everything concerning Reports Request***************************************************************
+// **********************Reports API**************************************************
+// ***********************************************************************************
+  Stream<QuerySnapshot> getReportsIds(){
+    try{
+      return databaseReference.collection('Report').snapshots();
 
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
@@ -380,16 +419,20 @@ class Api {
                 //FETCHING DATA OF SUBCOLLECTION...
 //  var query  = await databaseReference.collection('Staffs').document("horlaz229@virtualwork.ng").
 //  collection('Wallet').getDocuments();
-//
 //  for(var d in query.documents){
 //  print(d.data);
 //  }
-   testPassword() async{
+   approveReportOf({bool approve}){
+    int value;
+    if(approve){
+      value = 1; //Approved
+    }else{
+      value = 2; //Decline
+    }
     try{
-          return databaseReference.collection('Staffs').document('horlaz229@virtualwork.ng').snapshots().listen((v){
-            print(v.data['Wallet_balance']);
-          });
-
+      return databaseReference.collection('Report').document('horlaz229@virtualwork.ng').updateData({
+        'status' : value
+      });
 
     }catch(e){
       print('******signInAnonymous ERROR ${e.toString()}');
@@ -408,27 +451,4 @@ class Api {
 
 }
 
-class Tester{
-  String amount, time, day;
-
-  Tester({this.amount, this.time, this.day});
-
-  static List<Tester> testerList = [
-    Tester(
-      amount: '100',
-      day: '12 days ago',
-      time: '12:00pm'
-    ),
-    Tester(
-        amount: '200',
-        day: '14 days ago',
-        time: '11:00pm'
-    ),
-    Tester(
-        amount: '100',
-        day: '15 days ago',
-        time: '1:00pm'
-    ),
-  ];
-}
 

@@ -61,7 +61,6 @@ class _ListofStaffScreenState extends State<ListofStaffScreen> {
     );
   }
 
-
   _addStaffUI(BuildContext context) {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -74,51 +73,6 @@ class _ListofStaffScreenState extends State<ListofStaffScreen> {
         });
   }
 
-
-  Widget _floatingCollapsed(){
-    // final clicked = Provider.of<QuerySnapshot>(context);
-
-    // print(clicked.documents);
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColor.nearlyDarkBlue,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(24.0),
-            topRight: Radius.circular(24.0)),
-      ),
-      margin: const EdgeInsets.fromLTRB(24.0, 70.0, 24.0, 0.0),
-      child: Center(
-        child: Text(
-          "This is the collapsed Widget",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  Widget _floatingPanel(List<DocumentSnapshot> documents, int index){
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.yellow,
-          borderRadius: BorderRadius.all(Radius.circular(24.0)),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20.0,
-              color: Colors.grey,
-            ),
-          ]
-      ),
-      margin: const EdgeInsets.all(54.0),
-      child: Center(
-          child: StaffDetailsWidgets(email: documents[index].data['Email'].toString(),
-              firstName: documents[index].data['Firstname'].toString(),
-              lastName: documents[index].data['Lastname'].toString(),
-              //pix: documents[index].data['pic'].toString(),
-              privilege: documents[index].data['privilege'].toString(),
-              projects: documents[index].data['Projects']
-          )
-      ),
-    );
-  }
 }
 
 class AddStaff extends StatefulWidget {
@@ -293,7 +247,5 @@ class _AddStaffState extends State<AddStaff> {
       processing = false;
     });
   }
-
-
 }
 

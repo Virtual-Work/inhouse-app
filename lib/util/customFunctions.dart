@@ -45,6 +45,11 @@ class CustomFunction{
       child: SpinKitPumpingHeart(color: AppColor.deep, duration: new Duration(seconds: 1),),
     );
   }
+  loadingWidgetInWhite(){
+    return Center(
+      child: SpinKitPumpingHeart(color: AppColor.white, duration: new Duration(seconds: 1),),
+    );
+  }
 
   errorWidget(String message){
     return Center(child: Text(message, textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0, color: Colors.red),),);
